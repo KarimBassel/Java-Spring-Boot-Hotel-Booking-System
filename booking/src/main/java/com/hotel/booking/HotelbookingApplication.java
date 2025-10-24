@@ -1,10 +1,16 @@
 package com.hotel.booking;
+import com.hotel.booking.model.*;
+import com.hotel.booking.model.Enums.RoomType;
+import com.hotel.booking.model.Enums.Status;
+import com.hotel.booking.repository.BookingRepository;
+import com.hotel.booking.repository.RoomRepository;
+import com.hotel.booking.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import com.hotel.booking.model.Hotel;
-import com.hotel.booking.repository.HotelRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.Date;
 
 @SpringBootApplication
 public class HotelbookingApplication {
@@ -14,11 +20,13 @@ public class HotelbookingApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(HotelRepository hotelRepo) {
+	CommandLineRunner run(BookingRepository bookingRepo, UserRepository userRepo, RoomRepository RoomRepo) {
 		return args -> {
-			hotelRepo.save(new Hotel("Grand Nile Tower", "Cairo"));
-			hotelRepo.save(new Hotel("Marriott Zamalek", "Cairo"));
-			System.out.println("✅ Hotels added successfully!");
+			User u = userRepo.getReferenceById(1L);
+			RoomRepo.save(new Room(true , 2000 , RoomType.SUITE, 1));
+			Room r = RoomRepo.getReferenceById(1L);
+			bookingRepo.save(new Booking(r, u, Status.PENDING, new Date(2025,11,3) , new Date(2025,11,3), new Date(2025,11,3), 3000));
+			//System.out.println("Bookings added successfully!");
 		};
 	}
 
