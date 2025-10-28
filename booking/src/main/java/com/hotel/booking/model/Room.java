@@ -23,6 +23,13 @@ public class Room {
     @Column
     private boolean availability;
 
+    /*
+    hotel_id --> foreign key that will be added to rooms table
+    hotel_id linked with the primary key found in table hotels which is the id
+    */
+    @ManyToOne
+    @JoinColumn(name="hotel_id" , nullable = false)
+    private Hotel hotel;
 
     //relationship with Hotel to be added
 

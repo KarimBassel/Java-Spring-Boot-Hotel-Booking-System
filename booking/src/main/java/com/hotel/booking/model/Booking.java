@@ -13,7 +13,7 @@ public class Booking {
     private Long id;
 
     @Column
-    private double totalPayment;
+    private double basePrice;
 
     @Column
     private Date checkIn;
@@ -47,7 +47,7 @@ public class Booking {
         this.createdAt = createdAt;
         this.checkOut = checkOut;
         this.checkIn = checkIn;
-        this.totalPayment = totalPayment;
+        this.basePrice = totalPayment;
     }
 
     public Room getRoom() {
@@ -99,11 +99,11 @@ public class Booking {
     }
 
     public double getTotalPayment() {
-        return totalPayment;
+        return basePrice;
     }
 
     public void setTotalPayment(double totalPayment) {
-        this.totalPayment = totalPayment;
+        this.basePrice = totalPayment;
     }
 
     public Long getId() {
