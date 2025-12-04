@@ -34,11 +34,14 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Review> userReviews;
 
+    @OneToMany(mappedBy = "user")
+    private List<Booking> userBookings;
 
     public User() {}
 
-    public User(List<Review> users, String phoneNumber, Role role, String password, String email, String name) {
-        this.userReviews = users;
+    public User(List<Booking> userBookings, List<Review> userReviews, String phoneNumber, Role role, String password, String email, String name) {
+        this.userBookings = userBookings;
+        this.userReviews = userReviews;
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.password = password;
@@ -100,5 +103,21 @@ public class User implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Booking> getUserBookings() {
+        return userBookings;
+    }
+
+    public void setUserBookings(List<Booking> userBookings) {
+        this.userBookings = userBookings;
+    }
+
+    public List<Review> getUserReviews() {
+        return userReviews;
+    }
+
+    public void setUserReviews(List<Review> userReviews) {
+        this.userReviews = userReviews;
     }
 }

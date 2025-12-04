@@ -31,7 +31,6 @@ public class Room {
     @JoinColumn(name="hotel_id" , nullable = false)
     private Hotel hotel;
 
-    //relationship with Hotel to be added
 
     public Room() {
 
