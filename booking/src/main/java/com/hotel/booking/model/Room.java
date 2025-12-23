@@ -63,6 +63,10 @@ public class Room {
         return price;
     }
 
+    public Hotel getHotel() {
+        return hotel;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }

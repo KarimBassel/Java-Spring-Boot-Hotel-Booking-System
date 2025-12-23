@@ -1,6 +1,8 @@
 package com.hotel.booking.controller;
 
 import java.util.List;
+
+import com.hotel.booking.dto.HotelResponse;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.service.HotelService;
@@ -15,7 +17,7 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
     @GetMapping
-    public List<Hotel> getAllAvailableHotels(){
+    public List<HotelResponse> getAllAvailableHotels(){
         return hotelService.getAllHotels();
     }
     //for Admins
@@ -26,7 +28,7 @@ public class HotelController {
 
     @GetMapping("/{hotel_id}")
     public List<Room> getHotelRooms(@PathVariable Long hotel_id){
-        Hotel hotel = hotelService.getHotelById(hotel_id);
-        return hotel.getRooms();
+        HotelResponse hotel = hotelService.getHotelById(hotel_id);
+        return hotel.Rooms();
     }
 }

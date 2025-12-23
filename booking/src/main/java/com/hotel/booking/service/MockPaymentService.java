@@ -30,7 +30,7 @@ import java.util.Map;
  *
  */
 // will be changed to @Profile('prod') in case of production ready version
-@Profile("dev")
+
 @Service
 public class MockPaymentService implements PaymentService {
 
@@ -73,10 +73,15 @@ public class MockPaymentService implements PaymentService {
     //should confirm payment in the frontend using stripe.js
     //then stripe notifies the backend using a Web Hook
     //this function simulates this scenario
+    //to simulate the process, frontend with call both functions
     @Override
     public PaymentConfirmationResponse confirmPayment(Long BookingID, String paymentId) {
+        Booking obj = bookingRepository.findById(BookingID)
+                .orElseThrow(() -> new RuntimeException("Booking Not Found"));
+        obj.setStatus(Status.CONFIRMED);
+
         // confirmation called from frontend
-        return new PaymentConfirmationResponse(paymentId, Status.CONFIRMED);
+        return new PaymentConfirmationResponse("MOCK_PI_"+BookingID, Status.CONFIRMED);
     }
 }
 

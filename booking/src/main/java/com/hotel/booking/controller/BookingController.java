@@ -1,5 +1,6 @@
 package com.hotel.booking.controller;
 
+import com.hotel.booking.dto.BookingResponse;
 import com.hotel.booking.model.Booking;
 import com.hotel.booking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,17 @@ public class BookingController {
     private BookingService bookingservice;
 
     @PostMapping
-    public Booking createBooking(@RequestBody Booking booking){
+    public BookingResponse createBooking(@RequestBody Booking booking){
         return bookingservice.saveBooking(booking);
     }
     //for testing
     @GetMapping
-    public List<Booking> getAllBookings(){
+    public List<BookingResponse> getAllBookings(){
         return bookingservice.getAllBookings();
     }
 
     @PutMapping("/{id}")
-    public Booking updateBooking(@PathVariable Long id , @RequestBody Booking newbooking){
+    public BookingResponse updateBooking(@PathVariable Long id , @RequestBody Booking newbooking){
         return bookingservice.updateBooking(id,newbooking);
     }
 }
