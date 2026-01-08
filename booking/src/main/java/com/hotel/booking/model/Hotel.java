@@ -1,6 +1,8 @@
 package com.hotel.booking.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
+
 import java.util.List;
 
 @Entity
@@ -18,8 +20,9 @@ public class Hotel {
 
     @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
+    //External brackets has to be kept
+    //this query is injected intom another select query
+    @Formula("(SELECT AVG(r.review) FROM reviews r WHERE r.hotel_id = id)")
     private double Rating;
 
     /*
@@ -33,6 +36,10 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel")
     private List<Review> reviews;
 
+    //The NO-ARG constructor is very important
+    //used by Hibernate to initialize an object
+    //Hibernate uses Reflection feature in Java
+    //Reflection --> the ability to access class names of attributes,methods etc... in runtime
     public Hotel(){}
     public Hotel(String name, String location, String description, double rating, List<Room> rooms, List<Review> reviews) {
         this.name = name;

@@ -3,6 +3,7 @@ package com.hotel.booking.controller;
 import java.util.List;
 
 import com.hotel.booking.dto.HotelResponse;
+import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.service.HotelService;
@@ -27,7 +28,7 @@ public class HotelController {
     }
 
     @GetMapping("/{hotel_id}")
-    public List<Room> getHotelRooms(@PathVariable Long hotel_id){
+    public List<RoomResponse> getHotelRooms(@PathVariable Long hotel_id){
         HotelResponse hotel = hotelService.getHotelById(hotel_id);
         return hotel.Rooms();
     }

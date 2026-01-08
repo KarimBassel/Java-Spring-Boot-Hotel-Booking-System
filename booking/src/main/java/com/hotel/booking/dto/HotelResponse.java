@@ -10,7 +10,7 @@ public record HotelResponse(
         String location,
         String description,
         double averageRating,
-        List<Room> Rooms
+        List<RoomResponse> Rooms
         )
 
 {}

@@ -19,7 +19,7 @@ public class Review {
 
     @Column
     private double review;
-
+    public Review(){}
     public Review(User user, Hotel hotel, double review) {
         this.user = user;
         this.hotel = hotel;

@@ -1,7 +1,7 @@
 package com.hotel.booking.model.Enums;
 
 public enum RoomType {
-    SIGNLE,
+    SINGLE,
     DOUBLE,
     SUITE
 }

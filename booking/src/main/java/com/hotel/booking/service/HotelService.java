@@ -1,5 +1,6 @@
 package com.hotel.booking.service;
 
+import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
 import com.hotel.booking.model.Room;
@@ -8,6 +9,8 @@ import com.hotel.booking.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hotel.booking.dto.HotelResponse;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,17 +74,35 @@ public class HotelService {
                 .average()
                 .orElse(0.0);
     }
-
     // DTO mapping (private helper)
+    //If Needed --> Mapper Classes should be created, but for now it is manageable
     private HotelResponse mapToHotelResponse(Hotel hotel) {
+        List<Room> rooms = hotel.getRooms();
+        List<RoomResponse> roomresponses= new ArrayList<>();
+        for(Room room : rooms){
+            roomresponses.add(maptoRoomResponse(room));
+        }
+        //This step is better than constructing the hotel object from the ID and getting the average
+        //it is better to query the database directly through the repository
+        //and receive instant response
+        double rating = hotelRepository.findAverageRating(hotel.getId());
         return new HotelResponse(
                 hotel.getId(),
                 hotel.getName(),
                 hotel.getLocation(),
                 hotel.getDescription(),
-                getAverageRating(hotel.getId()),
-                hotel.getRooms()   // keep as-is if Room DTO not introduced yet
+                rating,
+                roomresponses
         );
+    }
+    private RoomResponse maptoRoomResponse(Room room){
+        return new RoomResponse(
+                room.getId(),
+                room.getRoomNumber(),
+                room.getRoomType(),
+                room.getPrice(),
+                room.isAvailability()
+                );
     }
 }
 

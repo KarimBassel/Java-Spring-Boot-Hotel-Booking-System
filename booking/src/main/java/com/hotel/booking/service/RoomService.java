@@ -42,5 +42,4 @@ public class RoomService {
         PaymentIntentResponse paymentId = paymentService.createPaymentIntent(bookingId, amount);
         System.out.println("Booking confirmed. Payment ID: " + paymentId);
     }
-
 }
