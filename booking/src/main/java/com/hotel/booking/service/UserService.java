@@ -53,7 +53,11 @@ public class UserService {
         User updatedUser = userRepository.save(existingUser);
         return mapToUserResponse(updatedUser);
     }
-
+    public UserResponse getUserbyEmail(String email){
+        return userRepository.findByEmail(email)
+                .map(this::mapToUserResponse)
+                .orElse(null);
+    }
     // DELETE
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
