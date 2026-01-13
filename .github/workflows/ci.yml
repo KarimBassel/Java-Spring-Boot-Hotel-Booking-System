@@ -28,4 +28,4 @@ jobs:
 
       # Step 3: Build and run tests
       - name: Build and test
-        run: ./mvnw clean test
+        run: mvnw clean test
