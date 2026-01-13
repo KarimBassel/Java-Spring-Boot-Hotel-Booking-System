@@ -28,4 +28,7 @@ jobs:
 
       # Step 3: Build and run tests
       - name: Build and test
-        run: mvnw clean test
+        run: |
+          cd booking
+          ./mvnw clean install
+          ./mvnw test
