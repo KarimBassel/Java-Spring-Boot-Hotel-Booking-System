@@ -1,4 +1,4 @@
-package com.hotel.booking.auth;
+package com.hotel.booking.auth.service;
 
 import com.hotel.booking.auth.dto.AuthResponse;
 import com.hotel.booking.auth.dto.LoginRequest;

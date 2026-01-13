@@ -1,5 +1,6 @@
-package com.hotel.booking.auth;
+package com.hotel.booking.auth.filters;
 
+import com.hotel.booking.auth.service.JwtService;
 import com.hotel.booking.dto.UserResponse;
 import com.hotel.booking.service.UserService;
 import jakarta.servlet.FilterChain;

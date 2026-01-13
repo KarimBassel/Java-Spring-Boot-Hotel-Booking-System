@@ -1,5 +1,6 @@
-package com.hotel.booking.auth;
+package com.hotel.booking.auth.controller;
 
+import com.hotel.booking.auth.service.AuthService;
 import com.hotel.booking.auth.dto.AuthResponse;
 import com.hotel.booking.auth.dto.LoginRequest;
 import com.hotel.booking.auth.dto.RegisterRequest;

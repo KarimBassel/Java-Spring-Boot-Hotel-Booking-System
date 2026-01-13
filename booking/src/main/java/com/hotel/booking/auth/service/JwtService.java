@@ -1,4 +1,4 @@
-package com.hotel.booking.auth;
+package com.hotel.booking.auth.service;
 import com.hotel.booking.model.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

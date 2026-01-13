@@ -8,6 +8,7 @@ import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +23,8 @@ public class HotelController {
         return hotelService.getAllHotels();
     }
     //for Admins
-    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/api/hotels")
     public Hotel createHotel(@RequestBody Hotel hotel){
         return hotelService.addHotel(hotel);
     }
