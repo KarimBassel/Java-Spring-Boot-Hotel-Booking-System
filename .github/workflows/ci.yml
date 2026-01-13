@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       # Step 1: Checkout code
@@ -25,13 +25,10 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      # Step 3: Make script executable
-      - name: Make Maven Wrapper executable
-        run: chmod +x ./booking/mvnw
         
-      # Step 4: Build and run tests
+      # Step 3: Build and run tests
       - name: Build and test
         run: |
           cd booking
-          ./mvnw clean install
-          ./mvnw test
+          ./mvnw.cmd clean install
+          ./mvnw.cmd test
