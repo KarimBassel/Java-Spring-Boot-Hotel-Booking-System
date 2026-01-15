@@ -19,15 +19,5 @@ public class HotelbookingApplication {
 		SpringApplication.run(HotelbookingApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner run(BookingRepository bookingRepo, UserRepository userRepo, RoomRepository RoomRepo) {
-		return args -> {
-			//User u = userRepo.getReferenceById(1L);
-			//RoomRepo.save(new Room(true , 2000 , RoomType.SUITE, 1));
-			//Room r = RoomRepo.getReferenceById(1L);
-			//bookingRepo.save(new Booking(r, u, Status.PENDING, new Date(2025,11,3) , new Date(2025,11,3), new Date(2025,11,3), 3000));
-			//System.out.println("Bookings added successfully!");
-		};
-	}
 
 }

@@ -37,7 +37,7 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 //Prevents Unauthenticated access
-                .anonymous(anonymous -> anonymous.disable())
+                ///.anonymous(anonymous -> anonymous.disable())
                 //Authorization rules
                 //register and login will be public endpoints
                 //all other enpoints are protected --> requires tje JWT token
