@@ -24,7 +24,7 @@ public class HotelController {
     }
     //for Admins
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/api/hotels")
+    @PostMapping
     public Hotel createHotel(@RequestBody Hotel hotel){
         return hotelService.addHotel(hotel);
     }
