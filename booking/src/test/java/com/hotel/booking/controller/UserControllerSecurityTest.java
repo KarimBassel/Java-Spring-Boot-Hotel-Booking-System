@@ -1,6 +1,5 @@
 package com.hotel.booking.controller;
 
-import com.hotel.booking.auth.service.JwtService;
 import com.hotel.booking.config.SecurityConfig;
 import com.hotel.booking.dto.UserResponse;
 import com.hotel.booking.model.Enums.Role;
@@ -13,10 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 /*
 401 Unauthorized → user not authenticated.
 403 Forbidden → user authenticated but lacks permission.
@@ -30,6 +32,7 @@ Enables MockMvc, a Spring testing utility for HTTP requests without starting a r
 Makes sure your custom security configuration is included in the test context.
  */
 @Import(SecurityConfig.class)
+@ActiveProfiles("test")
 class UserControllerSecurityTest {
 
     @Autowired
@@ -43,14 +46,12 @@ class UserControllerSecurityTest {
 
     1. Spring injects these mocks in  the controller
     2. any method call uses these mocks
-
      */
     @MockBean
     private UserSecurity userSecurity;
 
     @MockBean
     private UserService userService;
-
 
     /* ------------------ GET /api/users ------------------ */
     /*
@@ -69,9 +70,10 @@ class UserControllerSecurityTest {
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isForbidden());
     }
-/*
-Authenticated & Authorized --> 200 OK
- */
+
+    /*
+    Authenticated & Authorized --> 200 OK
+     */
     @Test
     @WithMockUser(roles = "ADMIN")
     void adminCanAccessGetAllUsers() throws Exception {
@@ -90,9 +92,10 @@ Authenticated & Authorized --> 200 OK
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isForbidden());
     }
+
     /*
-Authenticated & Authorized --> 200 OK
- */
+    Authenticated & Authorized --> 200 OK
+     */
     @Test
     @WithMockUser(roles = "GUEST")
     void owner_canAccess() throws Exception {
@@ -110,6 +113,7 @@ Authenticated & Authorized --> 200 OK
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk());
     }
+
     /*
     Authenticated & Authorized --> 200 OK
      */
