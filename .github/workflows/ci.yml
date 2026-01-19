@@ -30,6 +30,7 @@ jobs:
       - name: Build, Test and Run JaCoCo
         run: |
           cd booking
+          chmod +x ./mvnw
           ./mvnw clean verify
 
       # Set up Docker Build
