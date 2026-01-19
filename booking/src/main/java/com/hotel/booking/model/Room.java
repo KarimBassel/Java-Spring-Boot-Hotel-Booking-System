@@ -67,6 +67,10 @@ public class Room {
         return hotel;
     }
 
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }

@@ -26,6 +26,13 @@ public class Review {
         this.review = review;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public double getReview() {
         return review;
