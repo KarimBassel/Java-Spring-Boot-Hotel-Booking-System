@@ -1,0 +1,16 @@
+# Ignore build folders
+target/
+*.class
+
+# Ignore local IDE files
+*.iml
+*.log
+.idea/
+
+# Git and OS files
+.git
+.gitignore
+.DS_Store
+
+# Maven wrapper files
+.mvn/
