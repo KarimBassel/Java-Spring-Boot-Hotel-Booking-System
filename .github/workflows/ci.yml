@@ -27,7 +27,7 @@ jobs:
           distribution: temurin
         
       # Step 3: Build and run tests
-      - name: Build and test
+      - name: Build, Test and Run JaCoCo
         run: |
           cd booking
            ./mvnw.cmd clean test
