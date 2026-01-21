@@ -4,6 +4,7 @@ import com.hotel.booking.dto.CreateUserRequest;
 import com.hotel.booking.dto.UpdateUserRequest;
 import com.hotel.booking.dto.UserResponse;
 import com.hotel.booking.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

@@ -42,7 +42,10 @@ public class SecurityConfig {
                 //register and login will be public endpoints
                 //all other enpoints are protected --> requires tje JWT token
              .authorizeHttpRequests(auth -> auth
-             .requestMatchers("/api/auth/**").permitAll()
+             .requestMatchers("/api/auth/**",
+                                     "/swagger-ui.html",
+                                     "/swagger-ui/**",
+                                     "/v3/api-docs/**").permitAll()
               .anyRequest().authenticated()
                 )
                 //Stateless sessions

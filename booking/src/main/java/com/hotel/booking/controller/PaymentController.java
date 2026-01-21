@@ -7,11 +7,13 @@ import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Payment;
 import com.hotel.booking.service.BookingService;
 import com.hotel.booking.service.MockPaymentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Book;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {

@@ -7,10 +7,12 @@ import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.service.HotelService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/hotels")
 public class HotelController {
