@@ -36,6 +36,7 @@ public class SecurityConfig {
         //JWT auth is stateless authentication
 
         http.csrf(AbstractHttpConfigurer::disable)
+
                 //Prevents Unauthenticated access
                 ///.anonymous(anonymous -> anonymous.disable())
                 //Authorization rules
