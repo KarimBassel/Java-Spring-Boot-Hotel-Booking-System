@@ -1,5 +1,6 @@
 package com.hotel.booking.auth.controller;
 
+import com.hotel.booking.auth.dto.AuthLoginResponse;
 import com.hotel.booking.auth.service.AuthService;
 import com.hotel.booking.auth.dto.AuthResponse;
 import com.hotel.booking.auth.dto.LoginRequest;
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody @Valid LoginRequest request){
+    public AuthLoginResponse login(@RequestBody @Valid LoginRequest request){
         return authService.login(request);
     }
 

@@ -7,6 +7,7 @@ public record RoomResponse(
         int roomNumber,
         RoomType rootype,
         double price,
-        boolean availiability
+        boolean availiability,
+        String image_url
 )
 {}

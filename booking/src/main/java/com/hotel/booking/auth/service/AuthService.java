@@ -1,5 +1,6 @@
 package com.hotel.booking.auth.service;
 
+import com.hotel.booking.auth.dto.AuthLoginResponse;
 import com.hotel.booking.auth.dto.AuthResponse;
 import com.hotel.booking.auth.dto.LoginRequest;
 import com.hotel.booking.auth.dto.RegisterRequest;
@@ -37,7 +38,7 @@ public class AuthService {
         return new AuthResponse(jwtservice.generateToken(user));
     }
 
-    public AuthResponse login(LoginRequest loginRequest){
+    public AuthLoginResponse login(LoginRequest loginRequest){
         User user = userRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new RuntimeException("Invalid Credentials"));
         //Matches method encodes the raw password sent from frontend --> backend
         //then compares it with the encoded password stored in the database
@@ -51,7 +52,7 @@ public class AuthService {
             throw new RuntimeException("Invalid Credentials");
         }
 
-        return new AuthResponse(jwtservice.generateToken(user));
+        return new AuthLoginResponse(jwtservice.generateToken(user) , user.getId());
     }
 
 }

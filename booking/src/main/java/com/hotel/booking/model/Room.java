@@ -21,6 +21,9 @@ public class Room {
     private double price;
 
     @Column
+    private String imageUrl;
+
+    @Column
     private boolean availability;
 
     /*
@@ -89,5 +92,13 @@ public class Room {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

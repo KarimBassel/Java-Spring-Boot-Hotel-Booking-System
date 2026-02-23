@@ -35,6 +35,12 @@ public class BookingController {
         return bookingservice.getAllBookings();
     }
 
+    //@PreAuthorize("@bookingSecurity.IsBookingOwner(#user_id)")
+    @GetMapping("/{id}")
+    public List<BookingResponse> getUserBookings(@PathVariable Long id){
+        return bookingservice.getUserBookings(id);
+    }
+
     //Can only be accessed by the booking owner
     @PreAuthorize("@bookingSecurity.IsBookingOwner(#id) or hasRole('ADMIN')")
     @PutMapping("/{id}")

@@ -24,6 +24,11 @@ public class HotelController {
     public List<HotelResponse> getAllAvailableHotels(){
         return hotelService.getAllHotels();
     }
+
+    @GetMapping("/{hotel_id}")
+    public HotelResponse getHotel(@PathVariable Long hotel_id){
+        return hotelService.getHotelById(hotel_id);
+    }
     //for Admins
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
@@ -31,9 +36,9 @@ public class HotelController {
         return hotelService.addHotel(hotel);
     }
 
-    @GetMapping("/{hotel_id}")
-    public List<RoomResponse> getHotelRooms(@PathVariable Long hotel_id){
-        HotelResponse hotel = hotelService.getHotelById(hotel_id);
-        return hotel.Rooms();
-    }
+//    @GetMapping("/{hotel_id}")
+//    public List<RoomResponse> getHotelRooms(@PathVariable Long hotel_id){
+//        HotelResponse hotel = hotelService.getHotelById(hotel_id);
+//        return hotel.Rooms();
+//    }
 }

@@ -10,7 +10,8 @@ public record HotelResponse(
         String location,
         String description,
         double averageRating,
-        List<RoomResponse> Rooms
+        List<RoomResponse> Rooms,
+        String image_url
         )
 
 {}

@@ -25,6 +25,9 @@ public class Hotel {
     @Formula("(SELECT AVG(r.review) FROM reviews r WHERE r.hotel_id = id)")
     private double Rating;
 
+    @Column
+    private String imageUrl;
+
     /*
     mappedBy=hotel --> search in all Room objects and add to the list of Rooms
     the rooms that has the (hotel_id == this.id)
@@ -104,5 +107,13 @@ public class Hotel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

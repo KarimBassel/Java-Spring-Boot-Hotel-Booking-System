@@ -30,6 +30,8 @@ public class User implements Serializable {
     @Column(length = 15)
     private String phoneNumber;
 
+    @Column
+    private String imageUrl;
 
     @OneToMany(mappedBy = "user")
     private List<Review> userReviews;

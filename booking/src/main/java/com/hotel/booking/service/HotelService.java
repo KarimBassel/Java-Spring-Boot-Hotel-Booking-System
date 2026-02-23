@@ -92,7 +92,8 @@ public class HotelService {
                 hotel.getLocation(),
                 hotel.getDescription(),
                 rating,
-                roomresponses
+                roomresponses,
+                hotel.getImageUrl()
         );
     }
     private RoomResponse maptoRoomResponse(Room room){
@@ -101,7 +102,8 @@ public class HotelService {
                 room.getRoomNumber(),
                 room.getRoomType(),
                 room.getPrice(),
-                room.isAvailability()
+                room.isAvailability(),
+                room.getImageUrl()
                 );
     }
 }

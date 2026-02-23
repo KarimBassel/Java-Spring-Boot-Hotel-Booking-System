@@ -44,6 +44,7 @@ public class SecurityConfig {
                 //all other enpoints are protected --> requires tje JWT token
              .authorizeHttpRequests(auth -> auth
              .requestMatchers("/api/auth/**",
+                                     "api/images/upload",
                                      "/swagger-ui.html",
                                      "/swagger-ui/**",
                                      "/v3/api-docs/**").permitAll()
