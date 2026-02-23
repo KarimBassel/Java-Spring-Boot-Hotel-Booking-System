@@ -44,7 +44,8 @@ class HotelControllerSecurityTest {
                 "Cairo",
                 "Luxury hotel in downtown Cairo",
                 4.6,
-                List.of()
+                List.of(),
+                "image_url"
         );
     }
 

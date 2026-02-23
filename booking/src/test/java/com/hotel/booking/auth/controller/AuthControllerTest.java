@@ -1,5 +1,6 @@
 package com.hotel.booking.auth.controller;
 
+import com.hotel.booking.auth.dto.AuthLoginResponse;
 import com.hotel.booking.config.SecurityConfig;
 import com.hotel.booking.auth.dto.AuthResponse;
 import com.hotel.booking.auth.dto.LoginRequest;
@@ -41,6 +42,12 @@ class AuthControllerTest {
                 "mock-jwt-token"
         );
     }
+    private AuthLoginResponse mockAuthLoginResponse() {
+        return new AuthLoginResponse(
+                "mock-jwt-token",
+                5L
+        );
+    }
 
     @Test
     void unauthenticatedUser_canRegister() throws Exception {
@@ -65,7 +72,7 @@ class AuthControllerTest {
     @Test
     void unauthenticatedUser_canLogin() throws Exception {
         when(authService.login(any(LoginRequest.class)))
-                .thenReturn(mockAuthResponse());
+                .thenReturn(mockAuthLoginResponse());
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(APPLICATION_JSON)
@@ -84,7 +91,7 @@ class AuthControllerTest {
     @WithMockUser
     void authenticatedUser_canStillLogin() throws Exception {
         when(authService.login(any(LoginRequest.class)))
-                .thenReturn(mockAuthResponse());
+                .thenReturn(mockAuthLoginResponse());
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(APPLICATION_JSON)
