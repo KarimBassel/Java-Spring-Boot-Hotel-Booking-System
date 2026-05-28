@@ -10,6 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Custom query methods (Spring generates SQL automatically)
     //Useful in JWT Authentication
     Optional<User> findByEmail(String email);
-
+    User findUserById(long Id);
     boolean existsByEmail(String email);
 }

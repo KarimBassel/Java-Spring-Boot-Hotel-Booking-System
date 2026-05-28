@@ -5,9 +5,9 @@ import com.hotel.booking.model.Enums.RoomType;
 public record RoomResponse(
         Long id,
         int roomNumber,
-        RoomType rootype,
+        RoomType roomtype,
         double price,
-        boolean availiability,
+        boolean availability,
         String image_url
 )
 {}

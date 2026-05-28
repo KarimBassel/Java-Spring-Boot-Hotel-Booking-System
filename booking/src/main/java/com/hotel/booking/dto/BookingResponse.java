@@ -2,14 +2,14 @@ package com.hotel.booking.dto;
 
 import com.hotel.booking.model.Enums.Status;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record BookingResponse(
         Long bookingID,
         String hotelName,
-        int rommNumber,
-        Date CheckIn,
-        Date CheckOut,
+        int roomNumber,
+        LocalDate CheckIn,
+        LocalDate CheckOut,
         double totalPayment,
         Status status
 ) {

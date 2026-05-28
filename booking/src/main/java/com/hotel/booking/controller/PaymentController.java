@@ -1,43 +1,37 @@
 package com.hotel.booking.controller;
 
-import com.hotel.booking.dto.BookingResponse;
-import com.hotel.booking.dto.PaymentConfirmationResponse;
-import com.hotel.booking.dto.PaymentIntentResponse;
-import com.hotel.booking.model.Booking;
-import com.hotel.booking.model.Payment;
-import com.hotel.booking.service.BookingService;
-import com.hotel.booking.service.MockPaymentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.print.Book;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
+import java.util.HashMap;
+import java.util.Map;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
 
+    // Accept amount in the request body as JSON
+    @PostMapping("/create")
+    public Map<String, String> createPaymentIntent(@RequestBody Map<String, Long> payload) throws Exception {
 
-    @Autowired
-    private MockPaymentService paymentService;
+        Long amount = payload.get("amount"); // extract amount from JSON
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Amount must be a positive number");
+        }
 
-    //to get payment amount
-    @Autowired
-    private BookingService bookingService;
+        // Create Stripe PaymentIntent
+        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                .setAmount(amount * 100) // Stripe expects cents
+                .setCurrency("usd")
+                .build();
 
-    @GetMapping("/create-intent/{booking_id}")
-    public PaymentIntentResponse CreatePaymentIntent(@PathVariable Long bookingID){
-        BookingResponse obj = bookingService.getBookingbyID(bookingID);
-        return paymentService.createPaymentIntent(bookingID , obj.totalPayment());
+        PaymentIntent intent = PaymentIntent.create(params);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("clientSecret", intent.getClientSecret());
+
+        return response;
     }
-
-    @GetMapping("/confirm-payment")
-    public PaymentConfirmationResponse confirmPayment(@PathVariable Long bookingID){
-        BookingResponse obj = bookingService.getBookingbyID(bookingID);
-        return paymentService.confirmPayment(bookingID , "MOCK_PI"+obj.bookingID());
-    }
-
-
-
 }

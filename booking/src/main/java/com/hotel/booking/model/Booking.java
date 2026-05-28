@@ -2,8 +2,8 @@ package com.hotel.booking.model;
 
 import com.hotel.booking.model.Enums.Status;
 import jakarta.persistence.*;
-
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Entity
 @Table(name = "bookings")
@@ -16,13 +16,13 @@ public class Booking {
     private double basePrice;
 
     @Column
-    private Date checkIn;
+    private LocalDate checkIn;
 
     @Column
-    private Date checkOut;
+    private LocalDate checkOut;
 
     @Column
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -40,7 +40,7 @@ public class Booking {
 
 
     public Booking(){}
-    public Booking(Room room, User user, Status status, Date createdAt, Date checkOut, Date checkIn, double totalPayment) {
+    public Booking(Room room, User user, Status status, LocalDate createdAt, LocalDate checkOut, LocalDate checkIn, double totalPayment) {
         this.room = room;
         this.user = user;
         this.status = status;
@@ -74,27 +74,27 @@ public class Booking {
         this.status = status;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getCheckOut() {
+    public LocalDate getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Date checkOut) {
+    public void setCheckOut(LocalDate checkOut) {
         this.checkOut = checkOut;
     }
 
-    public Date getCheckIn() {
+    public LocalDate getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Date checkIn) {
+    public void setCheckIn(LocalDate checkIn) {
         this.checkIn = checkIn;
     }
 

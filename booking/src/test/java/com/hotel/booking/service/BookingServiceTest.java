@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +61,7 @@ public class BookingServiceTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).hotelName()).isEqualTo("Hilton");
-        assertThat(result.get(0).rommNumber()).isEqualTo(101);
+        assertThat(result.get(0).roomNumber()).isEqualTo(101);
 
         verify(bookingrepository, times(1)).findAll();
     }

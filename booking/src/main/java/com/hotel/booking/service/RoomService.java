@@ -1,6 +1,7 @@
 package com.hotel.booking.service;
 
 import com.hotel.booking.dto.PaymentIntentResponse;
+import com.hotel.booking.dto.RoomAvailabilityResponse;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +43,5 @@ public class RoomService {
         PaymentIntentResponse paymentId = paymentService.createPaymentIntent(bookingId, amount);
         System.out.println("Booking confirmed. Payment ID: " + paymentId);
     }
+
 }

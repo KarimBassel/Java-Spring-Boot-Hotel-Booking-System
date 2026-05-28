@@ -2,12 +2,12 @@ package com.hotel.booking.dto;
 
 import com.hotel.booking.model.Enums.Role;
 
-public record UserResponse(
+public record ProfileResponse(
         long id,
         String name,
         String email,
         String phoneNumber,
-        String imageURL,
-        Role role
+        Role role,
+        String ImageURL
 ) {
 }

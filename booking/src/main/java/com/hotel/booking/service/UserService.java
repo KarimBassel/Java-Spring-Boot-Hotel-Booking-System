@@ -1,5 +1,6 @@
 package com.hotel.booking.service;
 
+import com.hotel.booking.dto.ProfileResponse;
 import com.hotel.booking.model.User;
 import com.hotel.booking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +43,13 @@ public class UserService {
                 .orElse(null);
     }
 
+
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser == null) return null;
-
-        existingUser.setName(request.name());
-        existingUser.setEmail(request.email());
-        existingUser.setPhoneNumber(request.phoneNumber());
+        //Better design (not forced to modify this function)
+        //Update the mapper function only if needed
+        this.updateUserFields(existingUser, request);
 
         User updatedUser = userRepository.save(existingUser);
         return mapToUserResponse(updatedUser);
@@ -63,6 +64,13 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    // to Update one method only
+    private void updateUserFields(User user, UpdateUserRequest request) {
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPhoneNumber(request.phoneNumber());
+        user.setImageUrl(request.imageURL());
+    }
     // MAPPER
     private UserResponse mapToUserResponse(User user) {
         return new UserResponse(
@@ -70,8 +78,10 @@ public class UserService {
                 user.getName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
+                user.getImageUrl(),
                 user.getRole()
         );
     }
+
 }
 
