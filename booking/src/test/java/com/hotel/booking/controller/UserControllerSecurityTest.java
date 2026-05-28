@@ -106,7 +106,9 @@ class UserControllerSecurityTest {
                         "Karim Bassel",
                         "karim@example.com",
                         "0123456789",
+                        "",
                         Role.GUEST
+
                 )
         );
 
@@ -127,6 +129,7 @@ class UserControllerSecurityTest {
                         "Karim Bassel",
                         "karim@example.com",
                         "0123456789",
+                        "",
                         Role.GUEST
                 )
         );

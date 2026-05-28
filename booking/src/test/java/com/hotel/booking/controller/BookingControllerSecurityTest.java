@@ -1,11 +1,13 @@
 package com.hotel.booking.controller;
 
 import com.hotel.booking.config.SecurityConfig;
+import com.hotel.booking.dto.BookingRequest;
 import com.hotel.booking.dto.BookingResponse;
 import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.security.BookingSecurity;
 import com.hotel.booking.service.BookingService;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
+import static org.mockito.ArgumentMatchers.any;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -47,8 +50,8 @@ class BookingControllerSecurityTest {
                 1L,
                 "Hilton",
                 101,
-                new Date(),
-                new Date(),
+                LocalDate.now(),
+                LocalDate.now(),
                 2500.0,
                 Status.CONFIRMED
         );
@@ -59,7 +62,7 @@ class BookingControllerSecurityTest {
     @Test
     @WithMockUser(roles = "GUEST")
     void authenticatedUser_canCreateBooking() throws Exception {
-        when(bookingService.saveBooking(new Booking()))
+        when(bookingService.saveBooking(any(BookingRequest.class)))
                 .thenReturn(mockBookingResponse());
 
         mockMvc.perform(post("/api/bookings")

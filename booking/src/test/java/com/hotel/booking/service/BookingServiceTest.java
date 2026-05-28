@@ -1,5 +1,6 @@
 package com.hotel.booking.service;
 
+import com.hotel.booking.dto.BookingRequest;
 import com.hotel.booking.dto.BookingResponse;
 import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.Status;
@@ -14,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import static org.mockito.Mockito.*;
@@ -41,12 +44,21 @@ public class BookingServiceTest {
         Booking booking = new Booking();
         booking.setId(id);
         booking.setRoom(room);
-        booking.setCheckIn(new Date());
-        booking.setCheckOut(new Date());
+        booking.setCheckIn(LocalDate.now());
+        booking.setCheckOut(LocalDate.now());
         booking.setTotalPayment(2000);
         booking.setStatus(Status.CONFIRMED);
 
         return booking;
+    }
+    private BookingRequest createBookingRequest() {
+        return new BookingRequest(
+                1L,
+                LocalDate.now(),
+                LocalDate.now().plusDays(2),
+                2,
+                2000.0
+        );
     }
 
 
@@ -67,17 +79,20 @@ public class BookingServiceTest {
     }
 
     @Test
-    void saveBooking_shouldSaveandReturnResponse(){
-        Booking booking = createBooking(1L);
-        when(bookingrepository.save(booking)).thenReturn(booking);
+    void saveBooking_shouldSaveandReturnResponse() {
 
-        BookingResponse response = bookingService.saveBooking(booking);
+        BookingRequest request = createBookingRequest();
+        Booking savedBooking = createBooking(1L);
+
+        when(bookingrepository.save(any(Booking.class)))
+                .thenReturn(savedBooking);
+
+        BookingResponse response = bookingService.saveBooking(request);
 
         assertThat(response.hotelName()).isEqualTo("Hilton");
         assertThat(response.totalPayment()).isEqualTo(2000);
 
-        //verifies that this method is called during the tests
-        verify(bookingrepository).save(booking);
+        verify(bookingrepository).save(any(Booking.class));
     }
 
     @Test

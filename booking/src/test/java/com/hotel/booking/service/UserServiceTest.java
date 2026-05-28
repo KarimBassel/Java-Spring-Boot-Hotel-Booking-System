@@ -101,7 +101,8 @@ class UserServiceTest {
         UpdateUserRequest request = new UpdateUserRequest(
                 "Updated Name",
                 "updated@example.com",
-                "0999999999"
+                "0999999999",
+                ""
         );
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -119,7 +120,8 @@ class UserServiceTest {
         UpdateUserRequest request = new UpdateUserRequest(
                 "Name",
                 "email",
-                "phone"
+                "phone",
+                ""
         );
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
