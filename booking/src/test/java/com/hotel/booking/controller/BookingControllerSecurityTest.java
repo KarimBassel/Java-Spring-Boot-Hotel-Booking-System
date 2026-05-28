@@ -95,11 +95,12 @@ class BookingControllerSecurityTest {
     @Test
     @WithMockUser(roles = "GUEST")
     void guestNotOwner_cannotUpdateBooking() throws Exception {
+
         when(bookingSecurity.IsBookingOwner(1L)).thenReturn(false);
 
         mockMvc.perform(put("/api/bookings/1")
                         .contentType(APPLICATION_JSON)
-                        .content("{}"))
+                        .content("\"CONFIRMED\""))
                 .andExpect(status().isForbidden());
     }
 
@@ -107,25 +108,26 @@ class BookingControllerSecurityTest {
     @WithMockUser(roles = "GUEST")
     void owner_canUpdateBooking() throws Exception {
         when(bookingSecurity.IsBookingOwner(1L)).thenReturn(true);
-        when(bookingService.updateBooking(1L, new Booking()))
+        when(bookingService.updateBookingStatus(1L, Status.CONFIRMED))
                 .thenReturn(mockBookingResponse());
 
         mockMvc.perform(put("/api/bookings/1")
                         .contentType(APPLICATION_JSON)
-                        .content("{}"))
+                        .content("\"CONFIRMED\""))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void admin_canUpdateBooking_evenIfNotOwner() throws Exception {
+
         when(bookingSecurity.IsBookingOwner(1L)).thenReturn(false);
-        when(bookingService.updateBooking(1L, new Booking()))
+        when(bookingService.updateBookingStatus(1L, Status.CONFIRMED))
                 .thenReturn(mockBookingResponse());
 
         mockMvc.perform(put("/api/bookings/1")
                         .contentType(APPLICATION_JSON)
-                        .content("{}"))
+                        .content("\"CONFIRMED\""))
                 .andExpect(status().isOk());
     }
 }

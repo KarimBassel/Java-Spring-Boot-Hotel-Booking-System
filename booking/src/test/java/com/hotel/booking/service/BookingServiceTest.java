@@ -6,7 +6,10 @@ import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Room;
+import com.hotel.booking.model.User;
 import com.hotel.booking.repository.BookingRepository;
+import com.hotel.booking.repository.RoomRepository;
+import com.hotel.booking.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,9 +31,15 @@ public class BookingServiceTest {
 
     @Mock
     private BookingRepository bookingrepository;
-
+    @Mock
+    private RoomRepository roomRepository;
+    @Mock
+    private CurrentUserService currentuser;
+    @Mock
+    private UserRepository userRepository;
     @InjectMocks
     private BookingService bookingService;
+
 
     //Helper Function
     private Booking createBooking(Long id) {
@@ -83,6 +92,21 @@ public class BookingServiceTest {
 
         BookingRequest request = createBookingRequest();
         Booking savedBooking = createBooking(1L);
+
+        Room room = new Room();
+        room.setPrice(2000);
+
+        User user = new User();
+        user.setId(1L);
+
+        when(currentuser.getCurrentUserId())
+                .thenReturn(1L);
+
+        when(roomRepository.getById(anyLong()))
+                .thenReturn(room);
+
+        when(userRepository.findUserById(anyLong()))
+                .thenReturn(user);
 
         when(bookingrepository.save(any(Booking.class)))
                 .thenReturn(savedBooking);
