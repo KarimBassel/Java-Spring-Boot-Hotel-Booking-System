@@ -114,6 +114,7 @@ public class BookingService {
     public BookingResponse maptoBookingResponse(Booking bookingobj){
         return new BookingResponse(
                 bookingobj.getId(),
+                bookingobj.getRoom().getHotel().getId(),
                 bookingobj.getRoom().getHotel().getName(),
                 bookingobj.getRoom().getRoomNumber(),
                 bookingobj.getCheckIn(),

@@ -48,6 +48,7 @@ class BookingControllerSecurityTest {
     private BookingResponse mockBookingResponse() {
         return new BookingResponse(
                 1L,
+                2L,
                 "Hilton",
                 101,
                 LocalDate.now(),
@@ -71,7 +72,7 @@ class BookingControllerSecurityTest {
                 .andExpect(status().isOk());
     }
 
-    /* ------------------ GET /api/bookings ------------------ */
+
 
     @Test
     @WithMockUser(roles = "GUEST")
@@ -90,7 +91,6 @@ class BookingControllerSecurityTest {
                 .andExpect(status().isOk());
     }
 
-    /* ------------------ PUT /api/bookings/{id} ------------------ */
 
     @Test
     @WithMockUser(roles = "GUEST")

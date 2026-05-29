@@ -1,17 +1,20 @@
 package com.hotel.booking.service;
 
+import com.hotel.booking.dto.CreateReviewRequest;
+import com.hotel.booking.dto.ReviewResponse;
+import com.hotel.booking.dto.UpdateReviewRequest;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
 import com.hotel.booking.model.User;
+import com.hotel.booking.repository.HotelRepository;
 import com.hotel.booking.repository.ReviewRepository;
+import com.hotel.booking.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,141 +22,147 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
-
-    @Mock
-    private ReviewRepository reviewrepository;
 
     @InjectMocks
     private ReviewService reviewService;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private HotelRepository hotelRepository;
+
     private User user;
     private Hotel hotel;
-    private Review review;
 
     @BeforeEach
     void setup() {
         user = new User();
         user.setId(1L);
+        user.setName("Karim");
 
         hotel = new Hotel();
         hotel.setId(1L);
+        hotel.setName("Hilton");
+    }
 
-        review = new Review(user, hotel, 4.0);
+    // ================= CREATE REVIEW =================
+    @Test
+    void shouldCreateReviewSuccessfully() {
+
+        CreateReviewRequest request =
+                new CreateReviewRequest(1L, 5.0, "Great");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(hotelRepository.findById(1L)).thenReturn(Optional.of(hotel));
+        when(reviewRepository.existsByUserAndHotel(user, hotel)).thenReturn(false);
+
+        Review saved = new Review();
+        saved.setId(10L);
+        saved.setUser(user);
+        saved.setHotel(hotel);
+        saved.setReview(5.0);
+        saved.setComment("Great");
+
+        when(reviewRepository.save(any())).thenReturn(saved);
+
+        ReviewResponse response =
+                reviewService.addReview(1L, request);
+
+        assertEquals(10L, response.id());
+        assertEquals(5.0, response.review());
+    }
+
+    // ================= GET PAST REVIEW =================
+    @Test
+    void shouldReturnPastReview() {
+
+        Review review = new Review();
         review.setId(1L);
-    }
+        review.setUser(user);
+        review.setHotel(hotel);
+        review.setReview(4.0);
+        review.setComment("Nice");
 
+        when(reviewRepository.getUserHotelReview(1L, 1L))
+                .thenReturn(review);
 
-    @Test
-    void addReview_savesAndReturnsReview() {
-        when(reviewrepository.save(any(Review.class))).thenReturn(review);
+        ReviewResponse response =
+                reviewService.getPastReview(1L, 1L);
 
-        Review result = reviewService.addReview(user, hotel, 4.0);
-
-        assertNotNull(result);
-        assertEquals(4.0, result.getReview());
-        assertEquals(user, result.getUser());
-        assertEquals(hotel, result.getHotel());
-
-        verify(reviewrepository).save(any(Review.class));
+        assertEquals(4.0, response.review());
     }
 
     @Test
-    void updateReview_whenReviewExists_updatesRating() {
-        when(reviewrepository.findById(1L)).thenReturn(Optional.of(review));
-        when(reviewrepository.save(review)).thenReturn(review);
+    void shouldThrowWhenReviewNotFound() {
 
-        Optional<Review> result =
-                reviewService.updateReview(1L, 5.0);
+        when(reviewRepository.getUserHotelReview(1L, 1L))
+                .thenReturn(null);
 
-        assertTrue(result.isPresent());
-        assertEquals(5.0, result.get().getReview());
-
-        verify(reviewrepository).save(review);
+        assertThrows(ResponseStatusException.class, () ->
+                reviewService.getPastReview(1L, 1L)
+        );
     }
 
     @Test
-    void updateReview_whenReviewNotFound_returnsEmptyOptional() {
-        when(reviewrepository.findById(1L)).thenReturn(Optional.empty());
+    void shouldUpdateReview() {
 
-        Optional<Review> result =
-                reviewService.updateReview(1L, 5.0);
+        Review review = new Review();
+        review.setId(1L);
+        review.setReview(3.0);
+        review.setComment("old");
 
-        assertFalse(result.isPresent());
-        verify(reviewrepository, never()).save(any());
+        review.setUser(user);
+        review.setHotel(hotel);
+
+        when(reviewRepository.findById(1L))
+                .thenReturn(Optional.of(review));
+
+        when(reviewRepository.save(any())).thenReturn(review);
+
+        UpdateReviewRequest request =
+                new UpdateReviewRequest(1L, 5.0, "new");
+
+        ReviewResponse response =
+                reviewService.updateReview(request);
+
+        assertEquals(5.0, response.review());
+        assertEquals("new", response.comment());
     }
 
-
     @Test
-    void deleteReview_whenExists_deletesAndReturnsTrue() {
-        when(reviewrepository.existsById(1L)).thenReturn(true);
+    void shouldDeleteReview() {
 
-        boolean result = reviewService.deleteReview(1L);
+        doNothing().when(reviewRepository).deleteById(1L);
 
-        assertTrue(result);
-        verify(reviewrepository).deleteById(1L);
+        reviewService.deleteReview(1L);
+
+        verify(reviewRepository, times(1))
+                .deleteById(1L);
     }
 
     @Test
-    void deleteReview_whenNotExists_returnsFalse() {
-        when(reviewrepository.existsById(1L)).thenReturn(false);
+    void shouldGetReviewsByHotel() {
 
-        boolean result = reviewService.deleteReview(1L);
+        Review review = new Review();
+        review.setUser(user);
+        review.setHotel(hotel);
+        review.setReview(4.0);
 
-        assertFalse(result);
-        verify(reviewrepository, never()).deleteById(anyLong());
-    }
+        when(hotelRepository.findById(1L))
+                .thenReturn(Optional.of(hotel));
 
-
-    @Test
-    void getReviewsByHotel_returnsList() {
-        when(reviewrepository.findByHotel(hotel))
+        when(reviewRepository.findByHotelOrderByIdDesc(hotel))
                 .thenReturn(List.of(review));
 
-        List<Review> reviews =
-                reviewService.getReviewsByHotel(hotel);
+        List<ReviewResponse> result =
+                reviewService.getByHotel(1L);
 
-        assertEquals(1, reviews.size());
-        verify(reviewrepository).findByHotel(hotel);
+        assertEquals(1, result.size());
     }
-
-    @Test
-    void getReviewsByUser_returnsList() {
-        when(reviewrepository.findByUser(user))
-                .thenReturn(List.of(review));
-
-        List<Review> reviews =
-                reviewService.getReviewsByUser(user);
-
-        assertEquals(1, reviews.size());
-        verify(reviewrepository).findByUser(user);
-    }
-
-
-    @Test
-    void getAverageRating_returnsCorrectAverage() {
-        Review r1 = new Review(user, hotel, 4.0);
-        Review r2 = new Review(user, hotel, 2.0);
-
-        when(reviewrepository.findByHotel(hotel))
-                .thenReturn(List.of(r1, r2));
-
-        double avg = reviewService.getAverageRating(hotel);
-
-        assertEquals(3.0, avg);
-    }
-
-    @Test
-    void getAverageRating_noReviews_returnsZero() {
-        when(reviewrepository.findByHotel(hotel))
-                .thenReturn(List.of());
-
-        double avg = reviewService.getAverageRating(hotel);
-
-        assertEquals(0.0, avg);
-    }
-
-
 }

@@ -2,6 +2,8 @@ package com.hotel.booking.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "reviews")
 public class Review {
@@ -19,11 +21,35 @@ public class Review {
 
     @Column
     private double review;
+
+    @Column(nullable = true)
+    private String comment;
+
+    private LocalDate createdAt;
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Review(){}
-    public Review(User user, Hotel hotel, double review) {
+    public Review(User user, Hotel hotel, double review,String comment,LocalDate createdAt) {
         this.user = user;
         this.hotel = hotel;
         this.review = review;
+        this.comment=comment;
+        this.createdAt=createdAt;
     }
 
     public Long getId() {
@@ -57,4 +83,5 @@ public class Review {
     public void setUser(User user) {
         this.user = user;
     }
+
 }
