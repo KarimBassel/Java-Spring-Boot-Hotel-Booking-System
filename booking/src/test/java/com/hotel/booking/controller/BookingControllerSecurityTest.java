@@ -100,7 +100,7 @@ class BookingControllerSecurityTest {
 
         mockMvc.perform(put("/api/bookings/1")
                         .contentType(APPLICATION_JSON)
-                        .content("\"CONFIRMED\""))
+                        .content("{ \"status\" : \"CONFIRMED\" }"))
                 .andExpect(status().isForbidden());
     }
 
@@ -113,7 +113,7 @@ class BookingControllerSecurityTest {
 
         mockMvc.perform(put("/api/bookings/1")
                         .contentType(APPLICATION_JSON)
-                        .content("\"CONFIRMED\""))
+                        .content("{ \"status\" : \"CONFIRMED\" }"))
                 .andExpect(status().isOk());
     }
 
@@ -127,7 +127,7 @@ class BookingControllerSecurityTest {
 
         mockMvc.perform(put("/api/bookings/1")
                         .contentType(APPLICATION_JSON)
-                        .content("\"CONFIRMED\""))
+                        .content("{ \"status\" : \"CONFIRMED\" }"))
                 .andExpect(status().isOk());
     }
 }

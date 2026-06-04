@@ -52,7 +52,7 @@ public class BookingController {
         return bookingservice.getUserBookings(id);
     }
 
-    //Can only be accessed by the booking owner
+    //Can only be accessed by the booking owner or admins
     @PreAuthorize("@bookingSecurity.IsBookingOwner(#id) or hasRole('ADMIN')")
     @PutMapping("/{id}")
     public BookingResponse updateBookingStatus(@PathVariable Long id, @RequestBody UpdateBookingRequest updateBookingRequest) {

@@ -107,7 +107,8 @@ class UserControllerSecurityTest {
                         "karim@example.com",
                         "0123456789",
                         "",
-                        Role.GUEST
+                        Role.GUEST,
+                        true
 
                 )
         );
@@ -130,7 +131,8 @@ class UserControllerSecurityTest {
                         "karim@example.com",
                         "0123456789",
                         "",
-                        Role.GUEST
+                        Role.GUEST,
+                        true
                 )
         );
         mockMvc.perform(get("/api/users/1"))
