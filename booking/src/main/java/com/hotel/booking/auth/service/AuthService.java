@@ -40,6 +40,11 @@ public class AuthService {
 
     public AuthLoginResponse login(LoginRequest loginRequest){
         User user = userRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new RuntimeException("Invalid Credentials"));
+
+        //Throw runtime exception if user is deactivated by an admin
+        if(!user.getStatus()){
+            throw new RuntimeException("User is Currently Inactive");
+        }
         //Matches method encodes the raw password sent from frontend --> backend
         //then compares it with the encoded password stored in the database
         /*

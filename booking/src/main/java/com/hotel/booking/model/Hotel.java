@@ -3,7 +3,7 @@ package com.hotel.booking.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "hotels")
@@ -21,8 +21,9 @@ public class Hotel {
     @Column(nullable = false)
     private String description;
     //External brackets has to be kept
-    //this query is injected intom another select query
-    @Formula("(SELECT AVG(r.review) FROM reviews r WHERE r.hotel_id = id)")
+    //this query is injected into another select query
+    //COALESCE returns the first non-null value
+    @Formula("(SELECT COALESCE(AVG(r.review), 0) FROM reviews r WHERE r.hotel_id = id)")
     private double Rating;
 
     @Column
@@ -32,12 +33,15 @@ public class Hotel {
     mappedBy=hotel --> search in all Room objects and add to the list of Rooms
     the rooms that has the (hotel_id == this.id)
      */
-    @OneToMany(mappedBy = "hotel")
-    private List<Room> rooms;
+    //Lists initialized with empty lists
+    //to prevent null references
+    //when an hotel is deleted, removes all related rooms using CascadeType.REMOVE
+    @OneToMany(mappedBy = "hotel" , cascade = CascadeType.REMOVE)
+    private List<Room> rooms = new ArrayList<>();
 
     //useful for some statistics in hotels pages
-    @OneToMany(mappedBy = "hotel")
-    private List<Review> reviews;
+    @OneToMany(mappedBy = "hotel" , cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
 
     //The NO-ARG constructor is very important
     //used by Hibernate to initialize an object

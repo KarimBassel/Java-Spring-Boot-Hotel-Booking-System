@@ -8,6 +8,8 @@ public record RoomResponse(
         RoomType roomtype,
         double price,
         boolean availability,
-        String image_url
+        String image_url,
+        Long hotelID,
+        String hotelName
 )
 {}

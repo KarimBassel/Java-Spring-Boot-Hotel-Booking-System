@@ -27,4 +27,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             AND r.hotel.id = :hotelID
             """)
     Review getUserHotelReview(@Param("userID") Long userID,@Param("hotelID") Long hotelID);
+
+
+    @Query("""
+            SELECT r
+            FROM Review r
+            """)
+    List<Review> getAllReviews();
 }

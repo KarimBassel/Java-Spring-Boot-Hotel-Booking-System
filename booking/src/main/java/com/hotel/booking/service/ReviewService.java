@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +29,16 @@ public class ReviewService {
     @Autowired
     private HotelRepository hotelRepository;
 
+    public List<ReviewResponse> getAllReviews(){
+        List<ReviewResponse> responses = new ArrayList<>();
+        List<Review> reviews = reviewRepository.getAllReviews();
 
+        for(Review rev : reviews){
+            responses.add(mapToResponse(rev));
+        }
+
+        return responses;
+    }
     public ReviewResponse addReview(Long userID, CreateReviewRequest request) {
 
         User user = userRepository.findById(userID)

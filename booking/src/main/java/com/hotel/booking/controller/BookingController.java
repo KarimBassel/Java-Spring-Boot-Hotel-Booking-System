@@ -13,21 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 import java.util.List;
+
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
+
     //Dependancy Injection
     @Autowired
     private BookingService bookingservice;
+
     @Autowired
     private RoomService roomService;
 
 
     @PostMapping
     public BookingResponse createBooking(@RequestBody BookingRequest bookingRequest) {
-
-
         return bookingservice.saveBooking(bookingRequest);
     }
 
@@ -51,18 +52,11 @@ public class BookingController {
         return bookingservice.getUserBookings(id);
     }
 
-//    //Can only be accessed by the booking owner
-//    @PreAuthorize("@bookingSecurity.IsBookingOwner(#id) or hasRole('ADMIN')")
-//    @PutMapping("/{id}")
-//    public BookingResponse upLocalDateBooking(@PathVariable Long id , @RequestBody Booking newbooking){
-//        return bookingservice.upLocalDateBooking(id,newbooking);
-//    }
-
     //Can only be accessed by the booking owner
     @PreAuthorize("@bookingSecurity.IsBookingOwner(#id) or hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public BookingResponse updateBookingStatus(@PathVariable Long id, @RequestBody Status status) {
-        return bookingservice.updateBookingStatus(id, status);
+    public BookingResponse updateBookingStatus(@PathVariable Long id, @RequestBody UpdateBookingRequest updateBookingRequest) {
+        return bookingservice.updateBookingStatus(id, updateBookingRequest.status());
     }
 
     // Returns the overlapping bookings to frontend

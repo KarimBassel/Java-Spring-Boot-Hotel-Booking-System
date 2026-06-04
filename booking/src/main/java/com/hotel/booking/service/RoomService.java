@@ -1,47 +1,137 @@
 package com.hotel.booking.service;
 
-import com.hotel.booking.dto.PaymentIntentResponse;
-import com.hotel.booking.dto.RoomAvailabilityResponse;
+import com.hotel.booking.dto.CreateRoomRequest;
+import com.hotel.booking.dto.RoomResponse;
+import com.hotel.booking.dto.UpdateRoomRequest;
 import com.hotel.booking.model.Room;
+import com.hotel.booking.model.Hotel;
 import com.hotel.booking.repository.RoomRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hotel.booking.repository.HotelRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RoomService {
 
-    @Autowired
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
+    private final HotelRepository hotelRepository;
+    private final MockPaymentService paymentService;
 
-    @Autowired
-    private MockPaymentService paymentService;
-
-    public Room saveRoom(Room room) {
-        return roomRepository.save(room);
+    public RoomService(RoomRepository roomRepository,
+                       HotelRepository hotelRepository,
+                       MockPaymentService paymentService) {
+        this.roomRepository = roomRepository;
+        this.hotelRepository = hotelRepository;
+        this.paymentService = paymentService;
     }
 
+    // =========================
+    // CREATE ROOM
+    // =========================
+    public RoomResponse createRoom(CreateRoomRequest request) {
 
-    public Optional<Room> getRoomById(Long id) {
-        return roomRepository.findById(id);
+        Hotel hotel = hotelRepository.findById(request.hotelID())
+                .orElseThrow(() ->
+                        new RuntimeException("Hotel not found with id: " + request.hotelID()));
+
+        Room room = new Room();
+        room.setRoomNumber(request.roomNumber());
+        room.setRoomType(request.roomType());
+        room.setPrice(request.price());
+        room.setAvailability(request.availability());
+        room.setImageUrl(request.imageURL());
+        room.setHotel(hotel);
+
+        Room saved = roomRepository.save(room);
+
+        return mapToRoomResponse(saved);
     }
 
-
-    public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+    // =========================
+    // GET ALL ROOMS
+    // =========================
+    public List<RoomResponse> getAllRooms() {
+        return roomRepository.findAll()
+                .stream()
+                .map(this::mapToRoomResponse)
+                .toList();
     }
 
+    // =========================
+    // GET ROOM BY ID
+    // =========================
+    public RoomResponse getRoomById(Long id) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found with id: " + id));
 
+        return mapToRoomResponse(room);
+    }
+
+    // =========================
+    // GET ROOMS BY HOTEL (MISSING BEFORE)
+    // =========================
+    public List<RoomResponse> getRoomsByHotel(Long hotelId) {
+        return roomRepository.findAll()
+                .stream()
+                .filter(room -> room.getHotel() != null &&
+                        room.getHotel().getId().equals(hotelId))
+                .map(this::mapToRoomResponse)
+                .toList();
+    }
+
+    // =========================
+    // UPDATE ROOM
+    // =========================
+    public RoomResponse updateRoom(Long id, UpdateRoomRequest request) {
+
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found with id: " + id));
+
+        room.setRoomNumber(request.roomNumber());
+        room.setRoomType(request.roomType());
+        room.setPrice(request.price());
+        room.setAvailability(request.availability());
+        room.setImageUrl(request.imageURL());
+
+        Room saved = roomRepository.save(room);
+
+        return mapToRoomResponse(saved);
+    }
+
+    // =========================
+    // DELETE ROOM
+    // =========================
     public void deleteRoom(Long id) {
+        if (!roomRepository.existsById(id)) {
+            throw new RuntimeException("Room not found with id: " + id);
+        }
         roomRepository.deleteById(id);
     }
 
+    // =========================
+    // BOOK ROOM (your existing logic)
+    // =========================
     public void bookRoom(Long bookingId, Long amount) {
-        // Process payment using the mock service
-        PaymentIntentResponse paymentId = paymentService.createPaymentIntent(bookingId, amount);
-        System.out.println("Booking confirmed. Payment ID: " + paymentId);
+        var payment = paymentService.createPaymentIntent(bookingId, amount);
+        System.out.println("Booking confirmed. Payment ID: " + payment);
     }
 
+    // =========================
+    // MAPPER
+    // =========================
+    private RoomResponse mapToRoomResponse(Room room) {
+        return new RoomResponse(
+                room.getId(),
+                room.getRoomNumber(),
+                room.getRoomType(),
+                room.getPrice(),
+                room.isAvailability(),
+                room.getImageUrl(),
+                room.getHotel().getId(),
+                room.getHotel().getName()
+        );
+    }
 }

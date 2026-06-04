@@ -8,6 +8,7 @@ import com.hotel.booking.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,6 +23,13 @@ public class ReviewController {
     @Autowired
     private CurrentUserService currentUserService;
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public ResponseEntity<List<ReviewResponse>> getAllReviews(){
+        return ResponseEntity.ok(
+                reviewService.getAllReviews()
+        );
+    }
     @PostMapping
     public ResponseEntity<ReviewResponse> createReview(
             @RequestBody CreateReviewRequest request) {

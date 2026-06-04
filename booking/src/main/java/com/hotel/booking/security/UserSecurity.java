@@ -38,6 +38,4 @@ public class UserSecurity {
         return userResponse.id() == userId;
     }
 
-
-
 }

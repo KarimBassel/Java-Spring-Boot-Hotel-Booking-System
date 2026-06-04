@@ -8,6 +8,7 @@ public record UserResponse(
         String email,
         String phoneNumber,
         String imageURL,
-        Role role
+        Role role,
+        boolean status
 ) {
 }

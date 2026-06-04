@@ -1,14 +1,12 @@
 package com.hotel.booking.controller;
 
-import com.hotel.booking.dto.CreateUserRequest;
-import com.hotel.booking.dto.ProfileResponse;
-import com.hotel.booking.dto.UpdateUserRequest;
-import com.hotel.booking.dto.UserResponse;
+import com.hotel.booking.dto.*;
 import com.hotel.booking.service.CurrentUserService;
 import com.hotel.booking.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +34,14 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/status/{UserID}")
+    public ResponseEntity<UserResponse> changeUserStatus(@PathVariable Long UserID, @RequestBody ChangeUserStatusRequest changeUserStatusRequest){
+        return ResponseEntity.ok(
+                userService.changeUserStatus(UserID , changeUserStatusRequest.status())
+        );
+    }
     // Will be used by Admin Dashboard
     // getUserProfile used by the user
     @PreAuthorize("@userSecurity.isOwner(#id) or hasRole('ADMIN')")

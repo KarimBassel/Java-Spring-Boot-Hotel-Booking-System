@@ -6,6 +6,7 @@ import com.hotel.booking.auth.dto.AuthResponse;
 import com.hotel.booking.auth.dto.LoginRequest;
 import com.hotel.booking.auth.dto.RegisterRequest;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class AuthController {
     public AuthResponse register(@RequestBody @Valid RegisterRequest request){
         return authService.register(request);
     }
+
 
     @PostMapping("/login")
     public AuthLoginResponse login(@RequestBody @Valid LoginRequest request){

@@ -2,6 +2,7 @@ package com.hotel.booking.service;
 
 import com.hotel.booking.dto.BookingRequest;
 import com.hotel.booking.dto.BookingResponse;
+import com.hotel.booking.dto.UpdateBookingRequest;
 import com.hotel.booking.dto.RoomAvailabilityResponse;
 import com.hotel.booking.dto.UserResponse;
 import com.hotel.booking.model.Booking;
@@ -28,99 +29,89 @@ import java.util.Optional;
 public class BookingService {
 
     @Autowired
-    private BookingRepository bookingrepository;
+    private BookingRepository bookingRepository;
+
     @Autowired
     private RoomRepository roomRepository;
-    @Autowired
-    private UserRepository userrepository;
-    @Autowired
-    private CurrentUserService currentuser;
 
-    //for testing
-    public List<BookingResponse> getAllBookings(){
-        List<Booking> list=  bookingrepository.findAll();
-        List<BookingResponse> responses = new ArrayList<>();
-        for(Booking booking : list){
-            responses.add(maptoBookingResponse(booking));
-        }
-        return responses;
-    }
-    public BookingResponse saveBooking(BookingRequest bookingRequest){
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CurrentUserService currentUserService;
+
+    public BookingResponse saveBooking(BookingRequest request) {
+
         Booking booking = new Booking();
-        booking.setRoom(roomRepository.getById(bookingRequest.roomId()));
-        User user = userrepository.findUserById(currentuser.getCurrentUserId());
+
+        booking.setRoom(
+                roomRepository.findById(request.roomId())
+                        .orElseThrow(() -> new RuntimeException("Room not found"))
+        );
+
+        User user = userRepository.findById(
+                currentUserService.getCurrentUserId()
+        ).orElseThrow(() -> new RuntimeException("User not found"));
+
         booking.setUser(user);
-        booking.setCheckIn(bookingRequest.checkInDate());
-        booking.setCheckOut(bookingRequest.checkOutDate());
-        booking.setTotalPayment(bookingRequest.totalPrice());
+        booking.setCheckIn(request.checkInDate());
+        booking.setCheckOut(request.checkOutDate());
+        booking.setTotalPayment(request.totalPrice());
         booking.setStatus(Status.PENDING);
-        return maptoBookingResponse(bookingrepository.save(booking));
-    }
-    public List<BookingResponse> getUserBookings(Long uid){
-        List<Booking> list = bookingrepository.findByUserId(uid);
-        List<BookingResponse> responses = new ArrayList<>();
-        for(Booking booking : list){
-            responses.add(maptoBookingResponse(booking));
-        }
-        return responses;
-    }
-    public BookingResponse getBookingbyID(Long bid){
-        return maptoBookingResponse(bookingrepository.getReferenceById(bid));
-    }
-    public BookingResponse updateBooking(Long id,Booking newbooking){
-        //get current booking
-        Booking b = bookingrepository.getReferenceById(id);
-        if(b != null){
-            b.setRoom(newbooking.getRoom());
-            b.setCheckIn(newbooking.getCheckIn());
-            b.setCheckOut(newbooking.getCheckOut());
-            b.setStatus(newbooking.getStatus());
-            b.setTotalPayment(newbooking.getTotalPayment());
-            return maptoBookingResponse(bookingrepository.save(b));
-        }
-        return null;
 
+        return mapToBookingResponse(bookingRepository.save(booking));
     }
 
-    public BookingResponse updateBookingStatus(Long id, Status status){
-        //get current booking
-        Booking b = bookingrepository.getReferenceById(id);
-        if(b != null){
-            b.setStatus(status);
-            return maptoBookingResponse(bookingrepository.save(b));
-        }
-        return null;
-
+    public List<BookingResponse> getAllBookings() {
+        return bookingRepository.findAll()
+                .stream()
+                .map(this::mapToBookingResponse)
+                .toList();
     }
+
+    public List<BookingResponse> getUserBookings(Long userId) {
+        return bookingRepository.findByUserId(userId)
+                .stream()
+                .map(this::mapToBookingResponse)
+                .toList();
+    }
+
+    public BookingResponse getBookingById(Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        return mapToBookingResponse(booking);
+    }
+
+    public BookingResponse updateBookingStatus(Long id, Status status) {
+
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        booking.setStatus(status);
+
+        return mapToBookingResponse(bookingRepository.save(booking));
+    }
+
 
     public boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
-
-        boolean exists =
-                bookingrepository.existsOverlappingBooking(
-                        roomId,
-                        checkIn,
-                        checkOut
-                );
-
-        return !exists;
+        return !bookingRepository.existsOverlappingBooking(roomId, checkIn, checkOut);
     }
 
-    public List<Booking> getOverlappingBookings(Long roomId, LocalDate checkIn, LocalDate checkOut){
-        List<Booking> overlapping = bookingrepository.findOverlappingBookings(roomId,checkIn,checkOut);
-
-        return overlapping;
+    public List<Booking> getOverlappingBookings(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        return bookingRepository.findOverlappingBookings(roomId, checkIn, checkOut);
     }
 
-    public BookingResponse maptoBookingResponse(Booking bookingobj){
+    private BookingResponse mapToBookingResponse(Booking b) {
         return new BookingResponse(
-                bookingobj.getId(),
-                bookingobj.getRoom().getHotel().getId(),
-                bookingobj.getRoom().getHotel().getName(),
-                bookingobj.getRoom().getRoomNumber(),
-                bookingobj.getCheckIn(),
-                bookingobj.getCheckOut(),
-                bookingobj.getTotalPayment(),
-                bookingobj.getStatus()
+                b.getId(),
+                b.getRoom().getHotel().getId(),
+                b.getRoom().getHotel().getName(),
+                b.getRoom().getRoomNumber(),
+                b.getCheckIn(),
+                b.getCheckOut(),
+                b.getTotalPayment(),
+                b.getStatus()
         );
     }
 }

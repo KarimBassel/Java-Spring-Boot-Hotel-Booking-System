@@ -43,7 +43,7 @@ public class UserService {
                 .orElse(null);
     }
 
-
+    //method for GUEST to update user profile
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser == null) return null;
@@ -51,6 +51,16 @@ public class UserService {
         //Update the mapper function only if needed
         this.updateUserFields(existingUser, request);
 
+        User updatedUser = userRepository.save(existingUser);
+        return mapToUserResponse(updatedUser);
+    }
+    //method for ADMIN to change user status(No authority to change other fields)
+    public UserResponse changeUserStatus(Long userID, boolean status){
+        User existingUser = userRepository.findById(userID).orElse(null);
+        if (existingUser == null) return null;
+
+
+        existingUser.setStatus(status);
         User updatedUser = userRepository.save(existingUser);
         return mapToUserResponse(updatedUser);
     }
@@ -65,6 +75,7 @@ public class UserService {
     }
 
     // to Update one method only
+
     private void updateUserFields(User user, UpdateUserRequest request) {
         user.setName(request.name());
         user.setEmail(request.email());
@@ -79,7 +90,8 @@ public class UserService {
                 user.getEmail(),
                 user.getPhoneNumber(),
                 user.getImageUrl(),
-                user.getRole()
+                user.getRole(),
+                user.getStatus()
         );
     }
 

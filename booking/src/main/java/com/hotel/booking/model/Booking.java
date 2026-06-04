@@ -28,7 +28,7 @@ public class Booking {
     @Column(nullable = false)
     private Status status;
 
-    //foreign keys for user making the booking anf the booked room
+    //foreign keys for user making the booking and the booked room
     @ManyToOne
     @JoinColumn(name="user_id" , nullable=false)
     private User user;

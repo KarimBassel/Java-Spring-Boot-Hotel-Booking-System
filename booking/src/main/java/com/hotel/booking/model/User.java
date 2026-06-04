@@ -32,6 +32,10 @@ public class User implements Serializable {
 
     @Column
     private String imageUrl;
+    
+    //User is active by default on creation
+    @Column
+    private boolean status=true;
 
     public String getImageUrl() {
         return imageUrl;
@@ -49,7 +53,7 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(List<Booking> userBookings, List<Review> userReviews, String phoneNumber, Role role, String password, String email, String name) {
+    public User(List<Booking> userBookings, List<Review> userReviews, String phoneNumber, Role role, String password, String email, String name, boolean status) {
         this.userBookings = userBookings;
         this.userReviews = userReviews;
         this.phoneNumber = phoneNumber;
@@ -57,6 +61,7 @@ public class User implements Serializable {
         this.password = password;
         this.email = email;
         this.name = name;
+        this.status = status;
     }
 
     public List<Review> getUsers() {
@@ -129,5 +134,13 @@ public class User implements Serializable {
 
     public void setUserReviews(List<Review> userReviews) {
         this.userReviews = userReviews;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

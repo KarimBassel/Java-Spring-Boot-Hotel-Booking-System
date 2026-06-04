@@ -1,6 +1,8 @@
 package com.hotel.booking.service;
 
+import com.hotel.booking.dto.CreateHotelRequest;
 import com.hotel.booking.dto.RoomResponse;
+import com.hotel.booking.dto.UpdateHotelRequest;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
 import com.hotel.booking.model.Room;
@@ -24,20 +26,30 @@ public class HotelService {
     private ReviewRepository reviewRepository;
 
     // WRITE operations → Entity is OK
-    public Hotel addHotel(Hotel hotel) {
-        return hotelRepository.save(hotel);
+    public HotelResponse addHotel(CreateHotelRequest createHotelRequest) {
+        Hotel newhotel = new Hotel();
+        newhotel.setName(createHotelRequest.name());
+        newhotel.setDescription(createHotelRequest.description());
+        newhotel.setLocation(createHotelRequest.location());
+        newhotel.setImageUrl(createHotelRequest.image_url());
+        hotelRepository.save(newhotel);
+        return mapToHotelResponse(newhotel);
     }
 
-    public Optional<Hotel> updateHotel(Long hotelId, Hotel updatedHotel) {
-        Optional<Hotel> optionalHotel = hotelRepository.findById(hotelId);
-        if (optionalHotel.isPresent()) {
-            Hotel hotel = optionalHotel.get();
-            hotel.setName(updatedHotel.getName());
-            hotel.setLocation(updatedHotel.getLocation());
-            hotel.setDescription(updatedHotel.getDescription());
-            hotelRepository.save(hotel);
-        }
-        return optionalHotel;
+    public HotelResponse updateHotel(Long HotelID, UpdateHotelRequest updateHotelRequest) throws Exception {
+        Hotel hotel = hotelRepository.findById(HotelID)
+                .orElseThrow(() ->
+                        new Exception(
+                                "Hotel with id " + HotelID + " not found"));
+
+        hotel.setName(updateHotelRequest.name());
+        hotel.setLocation(updateHotelRequest.location());
+        hotel.setDescription(updateHotelRequest.description());
+        hotel.setImageUrl(updateHotelRequest.image_url());
+
+        hotelRepository.save(hotel);
+
+        return mapToHotelResponse(hotel);
     }
 
     public boolean deleteHotel(Long hotelId) {
@@ -79,8 +91,11 @@ public class HotelService {
     private HotelResponse mapToHotelResponse(Hotel hotel) {
         List<Room> rooms = hotel.getRooms();
         List<RoomResponse> roomresponses= new ArrayList<>();
-        for(Room room : rooms){
-            roomresponses.add(maptoRoomResponse(room));
+        //Creating a new hotel has no rooms yet
+        if(!rooms.isEmpty()){
+            for(Room room : rooms){
+                roomresponses.add(maptoRoomResponse(room));
+            }
         }
         //This step is better than constructing the hotel object from the ID and getting the average
         //it is better to query the database directly through the repository
@@ -103,7 +118,9 @@ public class HotelService {
                 room.getRoomType(),
                 room.getPrice(),
                 room.isAvailability(),
-                room.getImageUrl()
+                room.getImageUrl(),
+                room.getHotel().getId(),
+                room.getHotel().getName()
                 );
     }
 }

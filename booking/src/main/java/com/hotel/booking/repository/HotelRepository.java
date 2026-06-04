@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
-    @Query("SELECT AVG(r.review)FROM Review r WHERE r.hotel.id = :hotelId")
+    //COALESCE returns the first non-null value
+    @Query("SELECT COALESCE(AVG(r.review), 0)FROM Review r WHERE r.hotel.id = :hotelId")
     Double findAverageRating(@Param("hotelId") Long hotelId);
 
 }
