@@ -104,9 +104,8 @@ class ReviewServiceTest {
         when(reviewRepository.getUserHotelReview(1L, 1L))
                 .thenReturn(null);
 
-        assertThrows(ResponseStatusException.class, () ->
-                reviewService.getPastReview(1L, 1L)
-        );
+        ReviewResponse reviewnotfound = reviewService.getPastReview(1L,1L);
+        assertEquals(-1L , reviewnotfound.id());
     }
 
     @Test
