@@ -40,6 +40,12 @@ public class ReviewController {
 
     @GetMapping("/user-review")
     public ResponseEntity<ReviewResponse> getPastReview(@RequestParam Long hotelID){
+
+        ReviewResponse reviewResponse = reviewService.getPastReview(currentUserService.getCurrentUserId(), hotelID);
+
+        if(reviewResponse.id() == -1){
+            return  ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(
                 reviewService.getPastReview(currentUserService.getCurrentUserId(), hotelID)
         );

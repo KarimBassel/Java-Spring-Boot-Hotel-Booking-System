@@ -68,10 +68,9 @@ public class ReviewService {
                 reviewRepository.getUserHotelReview(userID, hotelID);
 
         if(review == null){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Review not found"
-            );
+            Review reviewnotfound = new Review();
+            reviewnotfound.setId(-1L);
+            return mapToNotFoundResponse(reviewnotfound);
         }
 
         return mapToResponse(review);
@@ -138,6 +137,19 @@ public class ReviewService {
                 review.getReview(),
                 review.getComment(),
                 review.getCreatedAt()
+        );
+    }
+    private ReviewResponse mapToNotFoundResponse(Review review) {
+
+        return new ReviewResponse(
+                review.getId(),
+                -1L,
+                "DUMMY",
+                -1L,
+                "DUMMY",
+                -1.0,
+                "DUMMY",
+                null
         );
     }
 }

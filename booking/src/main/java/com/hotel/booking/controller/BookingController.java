@@ -7,6 +7,7 @@ import com.hotel.booking.service.BookingService;
 import com.hotel.booking.service.RoomService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,4 +94,5 @@ public class BookingController {
                 conflicts
         );
     }
+
 }

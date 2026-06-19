@@ -45,10 +45,10 @@ public class User implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE)
     private List<Review> userReviews;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE)
     private List<Booking> userBookings;
 
     public User() {}

@@ -9,7 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Profile("!test")
+@Profile({"dev" , "staging"})
 @Configuration
 public class AdminInitializer {
 

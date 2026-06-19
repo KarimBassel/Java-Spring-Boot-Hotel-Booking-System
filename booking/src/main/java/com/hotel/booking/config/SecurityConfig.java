@@ -47,7 +47,9 @@ public class SecurityConfig {
                                      "api/images/upload",
                                      "/swagger-ui.html",
                                      "/swagger-ui/**",
-                                     "/v3/api-docs/**").permitAll()
+                                     "/v3/api-docs/**",
+                                     //E2E Testing data cleanup endpoint
+                                     "/api/test/**").permitAll()
               .anyRequest().authenticated()
                 )
                 //Stateless sessions
