@@ -30,11 +30,14 @@ jobs:
     needs: backend_tests
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Playwright workflow (frontend repo)
-        run: |
-          curl -X POST https://api.github.com/repos/KarimBassel/Hotel-Booking-Frontend/actions/workflows/playwright.yml/dispatches \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
-            -d '{
-              "ref": "master"
-            }'
+    - name: Trigger Playwright workflow
+      run: |
+        STATUS=$(curl -s -o response.txt -w "%{http_code}" \
+          -X POST \
+          https://api.github.com/repos/KarimBassel/Hotel-Booking-Frontend/actions/workflows/playwright.yml/dispatches \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+          -d '{"ref":"master"}')
+        
+        echo "HTTP Status: $STATUS"
+        cat response.txt
