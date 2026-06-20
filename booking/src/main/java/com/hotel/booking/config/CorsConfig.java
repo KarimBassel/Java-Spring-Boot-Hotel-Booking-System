@@ -22,7 +22,9 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:5173",
-                                "https://hotel-booking-backend-production-dc0d.up.railway.app"
+                                "https://hotel-booking-backend-production-dc0d.up.railway.app",
+                                "https://hotelbookingbackendstaging-e714gxm7.b4a.run",
+                                "https://frontend-hotel-booking-staging77.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
