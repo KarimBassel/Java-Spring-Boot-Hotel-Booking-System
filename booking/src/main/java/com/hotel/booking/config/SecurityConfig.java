@@ -4,6 +4,7 @@ import com.hotel.booking.auth.filters.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,7 +36,9 @@ public class SecurityConfig {
         //disables session based authentication
         //JWT auth is stateless authentication
 
-        http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
 
                 //Prevents Unauthenticated access
                 ///.anonymous(anonymous -> anonymous.disable())
@@ -44,7 +47,7 @@ public class SecurityConfig {
                 //all other enpoints are protected --> requires tje JWT token
              .authorizeHttpRequests(auth -> auth
              .requestMatchers("/api/auth/**",
-                                     "api/images/upload",
+                                     "/api/images/upload",
                                      "/swagger-ui.html",
                                      "/swagger-ui/**",
                                      "/v3/api-docs/**",
