@@ -1,8 +1,9 @@
-name: Backend CI
+name: Backend CI/CD
 
 on:
   push:
     branches: [main, master]
+
   pull_request:
 
 jobs:
@@ -25,19 +26,79 @@ jobs:
           chmod +x mvnw
           ./mvnw clean verify
 
-
-  trigger_playwright:
+  deploy_staging:
     needs: backend_tests
     runs-on: ubuntu-latest
+
     steps:
-    - name: Trigger Playwright workflow
-      run: |
-        STATUS=$(curl -s -o response.txt -w "%{http_code}" \
-          -X POST \
-          https://api.github.com/repos/KarimBassel/Hotel-Booking-Frontend/actions/workflows/playwright.yml/dispatches \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
-          -d '{"ref":"master"}')
-        
-        echo "HTTP Status: $STATUS"
-        cat response.txt
+      - name: Deploy backend to staging
+        run: |
+          curl -X POST "${{ secrets.STAGING_BACKEND_DEPLOY_WEBHOOK }}"
+
+  trigger_playwright:
+    needs: deploy_staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Playwright workflow
+        run: |
+          STATUS=$(curl -s -o response.txt -w "%{http_code}" \
+            -X POST \
+            https://api.github.com/repos/KarimBassel/Hotel-Booking-Frontend/actions/workflows/playwright.yml/dispatches \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+            -d '{"ref":"master"}')
+
+          echo "HTTP Status: $STATUS"
+          cat response.txt
+
+          if [ "$STATUS" != "204" ]; then
+            echo "Failed to trigger Playwright workflow"
+            exit 1
+          fi
+
+  wait_for_playwright:
+    needs: trigger_playwright
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for Playwright completion
+        run: |
+          echo "Waiting for Playwright workflow to start..."
+          sleep 20
+
+          while true
+          do
+            RESPONSE=$(curl -s \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+              https://api.github.com/repos/KarimBassel/Hotel-Booking-Frontend/actions/runs)
+
+            STATUS=$(echo "$RESPONSE" | jq -r '.workflow_runs[0].status')
+            CONCLUSION=$(echo "$RESPONSE" | jq -r '.workflow_runs[0].conclusion')
+
+            echo "Status: $STATUS"
+            echo "Conclusion: $CONCLUSION"
+
+            if [ "$STATUS" = "completed" ]; then
+
+              if [ "$CONCLUSION" = "success" ]; then
+                echo "Playwright passed"
+                exit 0
+              fi
+
+              echo "Playwright failed"
+              exit 1
+            fi
+
+            sleep 15
+          done
+
+  deploy_production:
+    needs: wait_for_playwright
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy backend to production
+        run: |
+          curl -X POST "${{ secrets.PROD_BACKEND_DEPLOY_WEBHOOK }}"
