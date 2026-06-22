@@ -51,6 +51,8 @@ public class SecurityConfig {
                                      "/swagger-ui.html",
                                      "/swagger-ui/**",
                                      "/v3/api-docs/**",
+                                     //For CI/CD Health Checks
+                                     "/actuator/health",
                                      //E2E Testing data cleanup endpoint
                                      "/api/test/**").permitAll()
               .anyRequest().authenticated()
