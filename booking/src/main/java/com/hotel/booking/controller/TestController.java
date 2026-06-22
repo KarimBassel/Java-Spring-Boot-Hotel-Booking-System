@@ -40,6 +40,12 @@ public class TestController {
 
     }
 
+    //Used for tests retries to mitigate the same booking is already booked when test retry
+    @DeleteMapping("/cleanup-bookings")
+    public void cleanupBookings(){
+        bookingRepository.deleteE2EBookings();
+    }
+
     @GetMapping("/addpastbooking")
     public void addPastBooking() {
         User user = userRepository.findByEmail("e2e@test.com")
