@@ -52,7 +52,7 @@ public class SecurityConfig {
                                      "/swagger-ui/**",
                                      "/v3/api-docs/**",
                                      //For version checks on deployment
-                                     "/api/version",
+                                     "/version",
                                      //Enable Access to stripe
                                      "/api/payments/webhooks/stripe",
                                      //For CI/CD Health Checks
