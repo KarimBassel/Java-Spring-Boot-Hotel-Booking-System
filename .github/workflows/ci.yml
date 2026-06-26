@@ -40,24 +40,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Staging Health Checks
+      - name: Wait for staging deployment
         run: |
-          echo "Waiting for backend..."
-          
-          for i in {1..30}; do
-            STATUS=$(curl -s https://java-spring-boot-hotel-booking-system-5smr.onrender.com/actuator/health | grep UP)
-          
-            if [ ! -z "$STATUS" ]; then
-              echo "Backend is healthy"
-              exit 0
+          echo "Waiting for staging to deploy commit ${{ github.sha }}..."
+  
+          for i in {1..60}; do
+            VERSION=$(curl -s ${{ secrets.STAGING_BACKEND_URL }}/version)
+  
+            echo "Current version: $VERSION"
+  
+            if [ "$VERSION" = "${{ github.sha }}" ]; then
+              echo "Correct version deployed."
+  
+              STATUS=$(curl -s ${{ secrets.STAGING_BACKEND_URL }}/actuator/health | jq -r '.status')
+  
+              if [ "$STATUS" = "UP" ]; then
+                echo "Backend is healthy."
+                exit 0
+              fi
+  
+              echo "Version updated but health is not UP yet."
             fi
-          
-            echo "Still starting..."
+  
+            echo "Still waiting..."
             sleep 10
           done
-          
-          echo "Backend failed to become healthy"
+  
+          echo "Deployment timed out."
           exit 1
+        env:
+          VERSION: ${{ github.sha }}
 
   trigger_playwright:
     needs: Wait_for_backend_health
