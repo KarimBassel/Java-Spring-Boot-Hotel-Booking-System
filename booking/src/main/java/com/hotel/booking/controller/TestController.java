@@ -6,6 +6,7 @@ import com.hotel.booking.model.Review;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.model.User;
 import com.hotel.booking.repository.BookingRepository;
+import com.hotel.booking.repository.PaymentRepository;
 import com.hotel.booking.repository.RoomRepository;
 import com.hotel.booking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class TestController {
     private RoomRepository roomRepository;
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @DeleteMapping("/cleanup")
     public void cleanupE2EData() {
@@ -43,6 +46,7 @@ public class TestController {
     //Used for tests retries to mitigate the same booking is already booked when test retry
     @DeleteMapping("/cleanup-bookings")
     public void cleanupBookings(){
+        paymentRepository.deleteE2EPayments();
         bookingRepository.deleteE2EBookings();
     }
 

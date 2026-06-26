@@ -4,7 +4,7 @@ import com.hotel.booking.model.Enums.PaymentMethod;
 import com.hotel.booking.model.Enums.Status;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "payments")
@@ -22,7 +22,7 @@ public class Payment {
 
 
     @Column
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -33,10 +33,14 @@ public class Payment {
     @Column
     private PaymentMethod paymentMethod;
 
+    //Stripe web hook updates the record using the payment intent ID
+    @Column(nullable = false, unique = true)
+    private String paymentIntentID;
+
 
     public Payment(){}
 
-    public Payment(PaymentMethod paymentMethod, Status paymentStatus, Date paymentDate, double amountToBePaid, Booking booking) {
+    public Payment(PaymentMethod paymentMethod, Status paymentStatus,LocalDate paymentDate, double amountToBePaid, Booking booking) {
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
         this.paymentDate = paymentDate;
@@ -60,11 +64,11 @@ public class Payment {
         this.paymentStatus = paymentStatus;
     }
 
-    public Date getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(Date paymentDate) {
+    public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
 
@@ -90,5 +94,13 @@ public class Payment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPaymentIntentID() {
+        return paymentIntentID;
+    }
+
+    public void setPaymentIntentID(String paymentIntentID) {
+        this.paymentIntentID = paymentIntentID;
     }
 }

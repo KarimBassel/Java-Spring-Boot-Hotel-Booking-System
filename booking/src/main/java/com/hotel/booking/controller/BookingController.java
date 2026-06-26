@@ -60,6 +60,13 @@ public class BookingController {
         return bookingservice.updateBookingStatus(id, updateBookingRequest.status());
     }
 
+    //Polling on this endpoint to check that stripe endpoint updated status successfully
+    @PreAuthorize("@bookingSecurity.IsBookingOwner(#id) or hasRole('ADMIN')")
+    @GetMapping("/BookingStatus/{id}")
+    public BookingResponse getBooking(@PathVariable Long id){
+        return bookingservice.getBookingById(id);
+    }
+
     // Returns the overlapping bookings to frontend
     @GetMapping("/check-availability")
     public RoomAvailabilityResponse checkRoomAvailability(

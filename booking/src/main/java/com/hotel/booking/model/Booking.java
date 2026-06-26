@@ -38,6 +38,8 @@ public class Booking {
     @JoinColumn(name="room_id" ,nullable = false)
     private Room room;
 
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
 
     public Booking(){}
     public Booking(Room room, User user, Status status, LocalDate createdAt, LocalDate checkOut, LocalDate checkIn, double totalPayment) {
@@ -114,5 +116,11 @@ public class Booking {
         this.id = id;
     }
 
+    public double getBasePrice() {
+        return basePrice;
+    }
 
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
+    }
 }

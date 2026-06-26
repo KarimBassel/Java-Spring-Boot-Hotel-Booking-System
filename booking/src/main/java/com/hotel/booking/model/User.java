@@ -48,7 +48,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE)
     private List<Review> userReviews;
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> userBookings;
 
     public User() {}

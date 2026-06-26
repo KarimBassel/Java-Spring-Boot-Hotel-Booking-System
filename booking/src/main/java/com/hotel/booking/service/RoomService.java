@@ -26,9 +26,7 @@ public class RoomService {
         this.paymentService = paymentService;
     }
 
-    // =========================
-    // CREATE ROOM
-    // =========================
+
     public RoomResponse createRoom(CreateRoomRequest request) {
 
         Hotel hotel = hotelRepository.findById(request.hotelID())
@@ -48,9 +46,7 @@ public class RoomService {
         return mapToRoomResponse(saved);
     }
 
-    // =========================
-    // GET ALL ROOMS
-    // =========================
+
     public List<RoomResponse> getAllRooms() {
         return roomRepository.findAll()
                 .stream()
@@ -58,9 +54,7 @@ public class RoomService {
                 .toList();
     }
 
-    // =========================
-    // GET ROOM BY ID
-    // =========================
+
     public RoomResponse getRoomById(Long id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() ->
@@ -69,9 +63,7 @@ public class RoomService {
         return mapToRoomResponse(room);
     }
 
-    // =========================
-    // GET ROOMS BY HOTEL (MISSING BEFORE)
-    // =========================
+
     public List<RoomResponse> getRoomsByHotel(Long hotelId) {
         return roomRepository.findAll()
                 .stream()
@@ -81,9 +73,7 @@ public class RoomService {
                 .toList();
     }
 
-    // =========================
-    // UPDATE ROOM
-    // =========================
+
     public RoomResponse updateRoom(Long id, UpdateRoomRequest request) {
 
         Room room = roomRepository.findById(id)
@@ -101,9 +91,6 @@ public class RoomService {
         return mapToRoomResponse(saved);
     }
 
-    // =========================
-    // DELETE ROOM
-    // =========================
     public void deleteRoom(Long id) {
         if (!roomRepository.existsById(id)) {
             throw new RuntimeException("Room not found with id: " + id);
@@ -111,17 +98,11 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
-    // =========================
-    // BOOK ROOM (your existing logic)
-    // =========================
     public void bookRoom(Long bookingId, Long amount) {
         var payment = paymentService.createPaymentIntent(bookingId, amount);
         System.out.println("Booking confirmed. Payment ID: " + payment);
     }
 
-    // =========================
-    // MAPPER
-    // =========================
     private RoomResponse mapToRoomResponse(Room room) {
         return new RoomResponse(
                 room.getId(),

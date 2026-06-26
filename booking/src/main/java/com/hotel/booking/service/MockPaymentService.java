@@ -1,15 +1,12 @@
 package com.hotel.booking.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import com.hotel.booking.dto.PaymentIntentResponse;
 import com.hotel.booking.dto.PaymentConfirmationResponse;
 import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.repository.BookingRepository;
 import com.hotel.booking.model.Booking;
-import java.util.UUID;
-import java.util.Map;
 
 
 /**
@@ -32,7 +29,7 @@ import java.util.Map;
 // will be changed to @Profile('prod') in case of production ready version
 
 @Service
-public class MockPaymentService implements PaymentService {
+public class MockPaymentService implements PaymentServicee {
 
     @Autowired
     private BookingRepository bookingRepository;

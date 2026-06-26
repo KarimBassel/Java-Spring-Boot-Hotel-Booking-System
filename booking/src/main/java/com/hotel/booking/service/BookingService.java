@@ -56,6 +56,7 @@ public class BookingService {
         booking.setUser(user);
         booking.setCheckIn(request.checkInDate());
         booking.setCheckOut(request.checkOutDate());
+        booking.setCreatedAt(LocalDate.now());
         booking.setTotalPayment(request.totalPrice());
         booking.setStatus(Status.PENDING);
 
