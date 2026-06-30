@@ -1,8 +1,8 @@
 package com.hotel.booking.service;
-
 import com.hotel.booking.dto.CreateReviewRequest;
 import com.hotel.booking.dto.ReviewResponse;
 import com.hotel.booking.dto.UpdateReviewRequest;
+import com.hotel.booking.exception.ReviewNotFoundException;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
 import com.hotel.booking.model.User;
@@ -14,11 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -50,8 +47,6 @@ class ReviewServiceTest {
         hotel.setId(1L);
         hotel.setName("Hilton");
     }
-
-    // ================= CREATE REVIEW =================
     @Test
     void shouldCreateReviewSuccessfully() {
 
@@ -78,7 +73,6 @@ class ReviewServiceTest {
         assertEquals(5.0, response.review());
     }
 
-    // ================= GET PAST REVIEW =================
     @Test
     void shouldReturnPastReview() {
 
@@ -104,8 +98,11 @@ class ReviewServiceTest {
         when(reviewRepository.getUserHotelReview(1L, 1L))
                 .thenReturn(null);
 
-        ReviewResponse reviewnotfound = reviewService.getPastReview(1L,1L);
-        assertEquals(-1L , reviewnotfound.id());
+        ReviewNotFoundException reviewnotfound = assertThrows(
+                ReviewNotFoundException.class,
+                () -> reviewService.getPastReview(1L,1L)
+        );
+        assertEquals( "Review not found for Hotel ID: 1 and User ID: 1", reviewnotfound.getMessage());
     }
 
     @Test

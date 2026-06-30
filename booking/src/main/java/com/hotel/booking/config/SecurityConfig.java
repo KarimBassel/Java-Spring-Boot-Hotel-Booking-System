@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 //Spring creates this at app startup
 @Configuration
 //Activates spring security for the application
-//responsible for auth, filter chain, enpoints security
+//responsible for auth, filter chain, endpoints security
 @EnableWebSecurity
 //responsible for @PreAuthorize, @PostAuthorize, SPEL Checks Activations
 @EnableMethodSecurity(prePostEnabled = true)
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 ///.anonymous(anonymous -> anonymous.disable())
                 //Authorization rules
                 //register and login will be public endpoints
-                //all other enpoints are protected --> requires tje JWT token
+                //all other endpoints are protected --> requires the JWT token
              .authorizeHttpRequests(auth -> auth
              .requestMatchers("/api/auth/**",
                                      "/api/images/upload",

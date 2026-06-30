@@ -2,35 +2,30 @@ package com.hotel.booking.controller;
 
 import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.Status;
-import com.hotel.booking.model.Review;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.model.User;
 import com.hotel.booking.repository.BookingRepository;
 import com.hotel.booking.repository.PaymentRepository;
 import com.hotel.booking.repository.RoomRepository;
 import com.hotel.booking.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/test")
+@RequiredArgsConstructor
 @Profile({"dev" , "staging"})
 public class TestController {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoomRepository roomRepository;
-    @Autowired
-    private BookingRepository bookingRepository;
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
+    private final BookingRepository bookingRepository;
+    private final PaymentRepository paymentRepository;
 
     @DeleteMapping("/cleanup")
     public void cleanupE2EData() {

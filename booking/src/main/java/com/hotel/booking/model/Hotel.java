@@ -1,8 +1,6 @@
 package com.hotel.booking.model;
-
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
-
 import java.util.*;
 
 @Entity

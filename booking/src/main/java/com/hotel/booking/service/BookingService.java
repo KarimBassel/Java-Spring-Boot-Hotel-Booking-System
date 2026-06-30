@@ -1,44 +1,25 @@
 package com.hotel.booking.service;
-
 import com.hotel.booking.dto.BookingRequest;
 import com.hotel.booking.dto.BookingResponse;
-import com.hotel.booking.dto.UpdateBookingRequest;
-import com.hotel.booking.dto.RoomAvailabilityResponse;
-import com.hotel.booking.dto.UserResponse;
+import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.model.User;
 import com.hotel.booking.repository.BookingRepository;
-import com.hotel.booking.repository.HotelRepository;
 import com.hotel.booking.repository.RoomRepository;
 import com.hotel.booking.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BookingService {
-
-    @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CurrentUserService currentUserService;
+    private final BookingRepository bookingRepository;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
     public BookingResponse saveBooking(BookingRequest request) {
 
@@ -46,12 +27,12 @@ public class BookingService {
 
         booking.setRoom(
                 roomRepository.findById(request.roomId())
-                        .orElseThrow(() -> new RuntimeException("Room not found"))
+                        .orElseThrow(() -> new ResourceNotFoundException("Room" , request.roomId()))
         );
 
         User user = userRepository.findById(
                 currentUserService.getCurrentUserId()
-        ).orElseThrow(() -> new RuntimeException("User not found"));
+        ).orElseThrow(() -> new ResourceNotFoundException("User" , currentUserService.getCurrentUserId()));
 
         booking.setUser(user);
         booking.setCheckIn(request.checkInDate());
@@ -79,7 +60,7 @@ public class BookingService {
 
     public BookingResponse getBookingById(Long id) {
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", id));
 
         return mapToBookingResponse(booking);
     }
@@ -87,7 +68,7 @@ public class BookingService {
     public BookingResponse updateBookingStatus(Long id, Status status) {
 
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking" , id));
 
         booking.setStatus(status);
 

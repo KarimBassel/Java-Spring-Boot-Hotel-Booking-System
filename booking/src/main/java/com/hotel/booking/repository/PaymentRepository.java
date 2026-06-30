@@ -1,5 +1,4 @@
 package com.hotel.booking.repository;
-
 import com.hotel.booking.model.Payment;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

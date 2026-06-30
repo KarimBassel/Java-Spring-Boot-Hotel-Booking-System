@@ -1,5 +1,5 @@
 package com.hotel.booking.service;
-
+import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.PaymentMethod;
 import com.hotel.booking.model.Enums.Status;
@@ -13,9 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.hotel.booking.dto.PaymentIntentResponse;
-
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class PaymentService {
     public PaymentIntentResponse createPaymentIntent(Long bookingId, double amount) throws StripeException {
 
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking" , bookingId));
 
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
@@ -70,13 +68,10 @@ public class PaymentService {
 
         Booking booking = bookingRepository.findById(bookingID)
                 .orElseThrow(() ->
-                        new RuntimeException("Booking not found: " + bookingID));
+                        new ResourceNotFoundException("Booking", bookingID));
 
         if (payment == null) {
-            throw new RuntimeException(
-                    "Payment not found for intent: "
-                            + paymentIntentId
-            );
+            throw new ResourceNotFoundException("Payment",paymentIntentId);
         }
 
         payment.setPaymentStatus(Status.CONFIRMED);

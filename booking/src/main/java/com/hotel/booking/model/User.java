@@ -1,5 +1,4 @@
 package com.hotel.booking.model;
-
 import com.hotel.booking.model.Enums.Role;
 import jakarta.persistence.*;
 import java.io.Serializable;

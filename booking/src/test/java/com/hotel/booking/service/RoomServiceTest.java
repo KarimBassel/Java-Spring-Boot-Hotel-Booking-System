@@ -1,11 +1,8 @@
 package com.hotel.booking.service;
-
 import com.hotel.booking.dto.CreateRoomRequest;
-import com.hotel.booking.dto.PaymentIntentResponse;
 import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.dto.UpdateRoomRequest;
 import com.hotel.booking.model.Enums.RoomType;
-import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.repository.HotelRepository;
@@ -17,10 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -33,9 +28,6 @@ class RoomServiceTest {
 
     @Mock
     private HotelRepository hotelRepository;
-
-    @Mock
-    private MockPaymentService paymentService;
 
     @InjectMocks
     private RoomService roomService;
@@ -267,22 +259,4 @@ class RoomServiceTest {
                 .hasMessageContaining("Room not found");
     }
 
-    @Test
-    void bookRoom_shouldCallPaymentService() {
-
-        PaymentIntentResponse payment =
-                new PaymentIntentResponse(
-                        "MOCK_PI",
-                        "MOCK_SECRET",
-                        Status.PENDING
-                );
-
-        when(paymentService.createPaymentIntent(1L, 500L))
-                .thenReturn(payment);
-
-        roomService.bookRoom(1L, 500L);
-
-        verify(paymentService)
-                .createPaymentIntent(1L, 500L);
-    }
 }

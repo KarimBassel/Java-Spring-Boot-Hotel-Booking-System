@@ -1,5 +1,4 @@
 package com.hotel.booking.service;
-
 import com.hotel.booking.dto.BookingRequest;
 import com.hotel.booking.dto.BookingResponse;
 import com.hotel.booking.model.Booking;
@@ -16,11 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -43,9 +40,6 @@ class BookingServiceTest {
     @InjectMocks
     private BookingService bookingService;
 
-    // ==========================
-    // Helpers
-    // ==========================
 
     private Booking createBooking(Long id) {
 
@@ -78,9 +72,6 @@ class BookingServiceTest {
         );
     }
 
-    // ==========================
-    // Tests
-    // ==========================
 
     @Test
     void getAllBookings_shouldReturnMappedResponses() {

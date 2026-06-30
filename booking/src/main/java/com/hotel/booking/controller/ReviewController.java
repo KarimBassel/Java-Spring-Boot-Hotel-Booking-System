@@ -6,22 +6,17 @@ import com.hotel.booking.dto.UpdateReviewRequest;
 import com.hotel.booking.service.CurrentUserService;
 import com.hotel.booking.service.ReviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
-    @Autowired
-    private ReviewService reviewService;
-    @Autowired
-    private CurrentUserService currentUserService;
+    private final ReviewService reviewService;
+    private final CurrentUserService currentUserService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
@@ -43,9 +38,9 @@ public class ReviewController {
 
         ReviewResponse reviewResponse = reviewService.getPastReview(currentUserService.getCurrentUserId(), hotelID);
 
-        if(reviewResponse.id() == -1){
-            return  ResponseEntity.notFound().build();
-        }
+//        if(reviewResponse.id() == -1){
+//            return  ResponseEntity.notFound().build();
+//        }
         return ResponseEntity.ok(
                 reviewService.getPastReview(currentUserService.getCurrentUserId(), hotelID)
         );

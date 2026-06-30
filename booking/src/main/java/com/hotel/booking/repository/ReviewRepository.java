@@ -1,5 +1,4 @@
 package com.hotel.booking.repository;
-
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
 import com.hotel.booking.model.User;

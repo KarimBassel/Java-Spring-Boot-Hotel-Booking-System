@@ -50,7 +50,6 @@ class HotelControllerSecurityTest {
         );
     }
 
-    /* ------------------ GET /api/hotels ------------------ */
 
     @Test
     @WithMockUser(roles = "GUEST")
@@ -62,7 +61,6 @@ class HotelControllerSecurityTest {
                 .andExpect(status().isOk());
     }
 
-    /* ------------------ GET /api/hotels ------------------ */
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -74,7 +72,6 @@ class HotelControllerSecurityTest {
                 .andExpect(status().isOk());
     }
 
-    /* ------------------ POST /api/hotels ------------------ */
 
     @Test
     @WithMockUser(roles = "GUEST")
@@ -112,7 +109,6 @@ class HotelControllerSecurityTest {
                 .andExpect(status().isOk());
     }
 
-    /* ------------------ GET /api/hotels/{id} ------------------ */
 
     @Test
     @WithMockUser(roles = "GUEST")

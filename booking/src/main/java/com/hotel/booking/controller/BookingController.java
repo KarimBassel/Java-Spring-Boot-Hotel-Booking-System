@@ -2,30 +2,35 @@ package com.hotel.booking.controller;
 
 import com.hotel.booking.dto.*;
 import com.hotel.booking.model.Booking;
-import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.service.BookingService;
 import com.hotel.booking.service.RoomService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
-
 import java.util.List;
+
+/*
+ * Dependencies are provided by the Spring IoC container when the bean is created.
+ * This guarantees all required dependencies are initialized, allows fields to be final
+ * (immutability), makes the class easier to unit test, and prevents creating objects
+ * with missing dependencies.
+ */
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/bookings")
 public class BookingController {
 
-    //Dependancy Injection
-    @Autowired
-    private BookingService bookingservice;
+    //Constructor Injection
+    // Constructor injection is preferred over field injection because it makes
+    // dependencies explicit, supports immutable (final) fields, improves testability,
+    // and allows Spring to validate required dependencies during bean creation.
 
-    @Autowired
-    private RoomService roomService;
+    private final BookingService bookingservice;
+    private final RoomService roomService;
 
 
     @PostMapping

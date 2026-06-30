@@ -3,27 +3,25 @@ package com.hotel.booking.service;
 import com.hotel.booking.dto.CreateHotelRequest;
 import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.dto.UpdateHotelRequest;
+import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.repository.HotelRepository;
 import com.hotel.booking.repository.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.hotel.booking.dto.HotelResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class HotelService {
 
-    @Autowired
-    private HotelRepository hotelRepository;
-
-    @Autowired
-    private ReviewRepository reviewRepository;
+    private final HotelRepository hotelRepository;
+    private final ReviewRepository reviewRepository;
 
     // WRITE operations → Entity is OK
     public HotelResponse addHotel(CreateHotelRequest createHotelRequest) {
@@ -38,9 +36,7 @@ public class HotelService {
 
     public HotelResponse updateHotel(Long HotelID, UpdateHotelRequest updateHotelRequest) throws Exception {
         Hotel hotel = hotelRepository.findById(HotelID)
-                .orElseThrow(() ->
-                        new Exception(
-                                "Hotel with id " + HotelID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel", HotelID));
 
         hotel.setName(updateHotelRequest.name());
         hotel.setLocation(updateHotelRequest.location());
@@ -62,9 +58,7 @@ public class HotelService {
 
     // READ operations → DTO
     public HotelResponse getHotelById(Long hotelId) {
-        Hotel hotel = hotelRepository.findById(hotelId).orElse(null);
-        if (hotel == null) return null;
-
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ResourceNotFoundException("Hotel" , hotelId));
         return mapToHotelResponse(hotel);
     }
 

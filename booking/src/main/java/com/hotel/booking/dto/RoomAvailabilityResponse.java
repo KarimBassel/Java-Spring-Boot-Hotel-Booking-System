@@ -1,5 +1,4 @@
 package com.hotel.booking.dto;
-import java.util.Date;
 import java.util.List;
 import java.time.LocalDate;
 

@@ -1,9 +1,7 @@
 package com.hotel.booking.model;
-
 import com.hotel.booking.model.Enums.PaymentMethod;
 import com.hotel.booking.model.Enums.Status;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity

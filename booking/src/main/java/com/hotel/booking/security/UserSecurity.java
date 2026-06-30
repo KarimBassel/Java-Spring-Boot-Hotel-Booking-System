@@ -1,9 +1,6 @@
 package com.hotel.booking.security;
-
 import com.hotel.booking.dto.UserResponse;
 import com.hotel.booking.repository.UserRepository;
-import com.hotel.booking.service.CurrentUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

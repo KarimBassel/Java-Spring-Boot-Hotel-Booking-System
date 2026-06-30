@@ -1,7 +1,4 @@
 package com.hotel.booking.dto;
-
-import com.hotel.booking.model.Room;
-
 import java.util.List;
 
 public record HotelResponse(

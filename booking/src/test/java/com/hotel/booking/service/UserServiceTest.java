@@ -1,8 +1,9 @@
 package com.hotel.booking.service;
-
 import com.hotel.booking.dto.CreateUserRequest;
 import com.hotel.booking.dto.UpdateUserRequest;
 import com.hotel.booking.dto.UserResponse;
+import com.hotel.booking.exception.ResourceNotFoundException;
+import com.hotel.booking.exception.UserNotFoundByEmailException;
 import com.hotel.booking.model.Enums.Role;
 import com.hotel.booking.model.User;
 import com.hotel.booking.repository.UserRepository;
@@ -12,12 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -90,9 +88,11 @@ class UserServiceTest {
     void getUserById_whenNotExists_returnsNull() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        UserResponse response = userService.getUserById(1L);
-
-        assertNull(response);
+        ResourceNotFoundException ex = assertThrows(
+                ResourceNotFoundException.class,
+                () -> userService.getUserById(1L)
+        );
+        assertEquals("User not found: 1" , ex.getMessage());
     }
 
 
@@ -126,9 +126,11 @@ class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        UserResponse response = userService.updateUser(1L, request);
-
-        assertNull(response);
+        ResourceNotFoundException ex = assertThrows(
+                ResourceNotFoundException.class,
+                () -> userService.updateUser(1L, request)
+        );
+        assertEquals("User not found: 1" , ex.getMessage());
         verify(userRepository, never()).save(any());
     }
 
@@ -139,22 +141,22 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         UserResponse response = userService.getUserbyEmail("karim@example.com");
-
         assertNotNull(response);
         assertEquals("Karim", response.name());
     }
 
     @Test
-    void getUserByEmail_whenNotExists_returnsNull() {
+    void getUserByEmail_whenNotExists_throwsUserNotFoundByEmailException() {
         when(userRepository.findByEmail("karim@example.com"))
                 .thenReturn(Optional.empty());
 
-        UserResponse response = userService.getUserbyEmail("karim@example.com");
-
-        assertNull(response);
+        UserNotFoundByEmailException ex = assertThrows(
+                UserNotFoundByEmailException.class,
+                () -> userService.getUserbyEmail("karim@example.com")
+        );
+        assertEquals("User not found for email: karim@example.com" , ex.getMessage());
     }
 
-    // ================= DELETE =================
 
     @Test
     void deleteUser_deletesById() {

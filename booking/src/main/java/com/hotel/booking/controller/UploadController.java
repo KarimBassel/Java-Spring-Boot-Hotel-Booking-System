@@ -2,11 +2,9 @@ package com.hotel.booking.controller;
 
 import com.hotel.booking.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -15,8 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UploadController {
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
+    private final CloudinaryService cloudinaryService;
 
     @PostMapping("/image")
     public ResponseEntity<?> uploadImage(

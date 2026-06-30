@@ -1,9 +1,10 @@
 package com.hotel.booking.service;
 
-import com.hotel.booking.dto.ProfileResponse;
+import com.hotel.booking.exception.ResourceNotFoundException;
+import com.hotel.booking.exception.UserNotFoundByEmailException;
 import com.hotel.booking.model.User;
 import com.hotel.booking.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.hotel.booking.dto.UserResponse;
 import com.hotel.booking.dto.CreateUserRequest;
@@ -11,12 +12,11 @@ import com.hotel.booking.dto.UpdateUserRequest;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    // CREATE
     public UserResponse saveUser(CreateUserRequest request) {
         User user = new User();
         user.setName(request.name());
@@ -28,7 +28,6 @@ public class UserService {
         return mapToUserResponse(savedUser);
     }
 
-    // READ ALL
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll()
                 .stream()
@@ -40,13 +39,13 @@ public class UserService {
     public UserResponse getUserById(Long id) {
         return userRepository.findById(id)
                 .map(this::mapToUserResponse)
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("User" , id));
     }
 
     //method for GUEST to update user profile
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
-        User existingUser = userRepository.findById(id).orElse(null);
-        if (existingUser == null) return null;
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User" , id));
         //Better design (not forced to modify this function)
         //Update the mapper function only if needed
         this.updateUserFields(existingUser, request);
@@ -56,10 +55,7 @@ public class UserService {
     }
     //method for ADMIN to change user status(No authority to change other fields)
     public UserResponse changeUserStatus(Long userID, boolean status){
-        User existingUser = userRepository.findById(userID).orElse(null);
-        if (existingUser == null) return null;
-
-
+        User existingUser = userRepository.findById(userID).orElseThrow(() -> new ResourceNotFoundException("User" , userID));
         existingUser.setStatus(status);
         User updatedUser = userRepository.save(existingUser);
         return mapToUserResponse(updatedUser);
@@ -67,9 +63,8 @@ public class UserService {
     public UserResponse getUserbyEmail(String email){
         return userRepository.findByEmail(email)
                 .map(this::mapToUserResponse)
-                .orElse(null);
+                .orElseThrow(() -> new UserNotFoundByEmailException(email));
     }
-    // DELETE
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

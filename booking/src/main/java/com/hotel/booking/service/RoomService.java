@@ -1,37 +1,30 @@
 package com.hotel.booking.service;
-
 import com.hotel.booking.dto.CreateRoomRequest;
 import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.dto.UpdateRoomRequest;
+import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.model.Room;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.repository.RoomRepository;
 import com.hotel.booking.repository.HotelRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RoomService {
 
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
-    private final MockPaymentService paymentService;
 
-    public RoomService(RoomRepository roomRepository,
-                       HotelRepository hotelRepository,
-                       MockPaymentService paymentService) {
-        this.roomRepository = roomRepository;
-        this.hotelRepository = hotelRepository;
-        this.paymentService = paymentService;
-    }
 
 
     public RoomResponse createRoom(CreateRoomRequest request) {
 
         Hotel hotel = hotelRepository.findById(request.hotelID())
                 .orElseThrow(() ->
-                        new RuntimeException("Hotel not found with id: " + request.hotelID()));
+                        new ResourceNotFoundException("Hotel", request.hotelID()));
 
         Room room = new Room();
         room.setRoomNumber(request.roomNumber());
@@ -58,7 +51,7 @@ public class RoomService {
     public RoomResponse getRoomById(Long id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Room not found with id: " + id));
+                        new ResourceNotFoundException("Room" , id));
 
         return mapToRoomResponse(room);
     }
@@ -78,7 +71,7 @@ public class RoomService {
 
         Room room = roomRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Room not found with id: " + id));
+                        new ResourceNotFoundException("Room",id));
 
         room.setRoomNumber(request.roomNumber());
         room.setRoomType(request.roomType());
@@ -93,14 +86,9 @@ public class RoomService {
 
     public void deleteRoom(Long id) {
         if (!roomRepository.existsById(id)) {
-            throw new RuntimeException("Room not found with id: " + id);
+            throw new ResourceNotFoundException("Room" ,id);
         }
         roomRepository.deleteById(id);
-    }
-
-    public void bookRoom(Long bookingId, Long amount) {
-        var payment = paymentService.createPaymentIntent(bookingId, amount);
-        System.out.println("Booking confirmed. Payment ID: " + payment);
     }
 
     private RoomResponse mapToRoomResponse(Room room) {

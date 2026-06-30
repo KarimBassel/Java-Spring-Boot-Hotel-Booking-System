@@ -1,13 +1,10 @@
 package com.hotel.booking.controller;
-
 import com.hotel.booking.config.SecurityConfig;
 import com.hotel.booking.dto.BookingRequest;
 import com.hotel.booking.dto.BookingResponse;
-import com.hotel.booking.model.Booking;
 import com.hotel.booking.model.Enums.Status;
 import com.hotel.booking.security.BookingSecurity;
 import com.hotel.booking.service.BookingService;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,9 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -58,7 +53,6 @@ class BookingControllerSecurityTest {
         );
     }
 
-    /* ------------------ POST /api/bookings ------------------ */
 
     @Test
     @WithMockUser(roles = "GUEST")
@@ -71,7 +65,6 @@ class BookingControllerSecurityTest {
                         .content("{}"))
                 .andExpect(status().isOk());
     }
-
 
 
     @Test

@@ -1,5 +1,4 @@
 package com.hotel.booking.model;
-
 import com.hotel.booking.model.Enums.RoomType;
 import jakarta.persistence.*;
 

@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /*
 Enables Cross Origin Resource Sharing
-Enables the communication between beackend and frontend
+Enables the communication between backend and frontend
 Enables the communication between different ports
  */
 @Configuration

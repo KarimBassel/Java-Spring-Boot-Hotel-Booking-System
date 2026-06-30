@@ -4,6 +4,7 @@ import com.hotel.booking.dto.CreateHotelRequest;
 import com.hotel.booking.dto.HotelResponse;
 import com.hotel.booking.dto.RoomResponse;
 import com.hotel.booking.dto.UpdateHotelRequest;
+import com.hotel.booking.exception.ResourceNotFoundException;
 import com.hotel.booking.model.Enums.RoomType;
 import com.hotel.booking.model.Hotel;
 import com.hotel.booking.model.Review;
@@ -17,12 +18,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -143,8 +144,8 @@ class HotelServiceTest {
         assertThatThrownBy(
                 () -> hotelService.updateHotel(1L, request)
         )
-                .isInstanceOf(Exception.class)
-                .hasMessageContaining("Hotel with id 1 not found");
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Hotel not found: ");
 
         verify(hotelRepository, never())
                 .save(any());
@@ -205,15 +206,17 @@ class HotelServiceTest {
     }
 
     @Test
-    void getHotelById_whenNotFound_shouldReturnNull() {
+    void getHotelById_whenNotFound_shouldThrowException() {
 
         when(hotelRepository.findById(1L))
                 .thenReturn(Optional.empty());
 
-        HotelResponse response =
-                hotelService.getHotelById(1L);
+        ResourceNotFoundException ex = assertThrows(
+                ResourceNotFoundException.class,
+                () -> hotelService.getHotelById(1L)
+        );
 
-        assertThat(response).isNull();
+        assertEquals("Hotel not found: 1", ex.getMessage());
     }
 
     @Test
